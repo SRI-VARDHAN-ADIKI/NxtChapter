@@ -8,16 +8,21 @@ const socket = io('http://localhost:5000'); // Normally env var
 const CoursePlayer = () => {
     const [activeTab, setActiveTab] = useState('resources');
     const [code, setCode] = useState('// Write your solution here\nconsole.log("Hello World");');
-    const [output, setOutput] = useState(null); // { success, results, xpAwarded }
+    const [output, setOutput] = useState(null);
     const [isExecuting, setIsExecuting] = useState(false);
     const [doubts, setDoubts] = useState([]);
     const [newDoubt, setNewDoubt] = useState('');
 
+    // AI Tutor State
+    const [tutorMessages, setTutorMessages] = useState([]);
+    const [tutorInput, setTutorInput] = useState('');
+    const [isTutorTyping, setIsTutorTyping] = useState(false);
+
     // Mock Video URL
-    const videoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ"; // Placeholder
+    const videoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ";
 
     useEffect(() => {
-        socket.emit('join_course', 'course_123'); // logic to join room
+        socket.emit('join_course', 'course_123');
 
         socket.on('receive_doubt', (data) => {
             setDoubts((prev) => [...prev, data]);
@@ -29,9 +34,8 @@ const CoursePlayer = () => {
     const handleRunCode = async () => {
         setIsExecuting(true);
         try {
-            // Hardcoded problem ID for demo purposes. In real app, fetch from Course data.
             const res = await api.post('/submission/execute', {
-                problemId: '65a000000000000000000000', // Must replace with real ID
+                problemId: '65a000000000000000000000',
                 sourceCode: code,
                 language: 'javascript'
             });
@@ -47,8 +51,32 @@ const CoursePlayer = () => {
     const sendDoubt = () => {
         if (!newDoubt.trim()) return;
         const msg = { text: newDoubt, user: 'Me', courseId: 'course_123' };
-        socket.emit('send_doubt', msg); // In real app, don't optimistcally append if broadcasting back to self
+        socket.emit('send_doubt', msg);
         setNewDoubt('');
+    };
+
+    const askTutor = async () => {
+        if (!tutorInput.trim()) return;
+
+        const userMsg = { sender: 'me', text: tutorInput };
+        setTutorMessages(prev => [...prev, userMsg]);
+        setTutorInput('');
+        setIsTutorTyping(true);
+
+        try {
+            const res = await api.post('/quiz/tutor-chat', {
+                message: userMsg.text,
+                codeContext: code,
+                history: tutorMessages // Context for AI
+            });
+
+            const aiMsg = { sender: 'ai', text: res.data.reply };
+            setTutorMessages(prev => [...prev, aiMsg]);
+        } catch (err) {
+            setTutorMessages(prev => [...prev, { sender: 'ai', text: "Sorry, I'm having trouble thinking right now." }]);
+        } finally {
+            setIsTutorTyping(false);
+        }
     };
 
     return (
@@ -80,12 +108,18 @@ const CoursePlayer = () => {
                             onClick={() => setActiveTab('chat')}
                             className={`flex-1 py-3 text-sm font-medium ${activeTab === 'chat' ? 'bg-gray-700 text-white' : 'text-gray-400 hover:bg-gray-700'}`}
                         >
-                            Doubt Chat
+                            Live Chat
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('tutor')}
+                            className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-1 ${activeTab === 'tutor' ? 'bg-indigo-900 text-indigo-100' : 'text-indigo-400 hover:bg-gray-700'}`}
+                        >
+                            <span>✨ AI Tutor</span>
                         </button>
                     </div>
 
                     <div className="flex-1 overflow-auto p-4">
-                        {activeTab === 'resources' ? (
+                        {activeTab === 'resources' && (
                             <div className="space-y-4">
                                 <div className="p-4 bg-gray-700 rounded-lg">
                                     <h4 className="font-bold mb-2">Cheatsheet</h4>
@@ -96,7 +130,9 @@ const CoursePlayer = () => {
                                     <p className="text-sm text-gray-300">Write a function to return the sum of two numbers.</p>
                                 </div>
                             </div>
-                        ) : (
+                        )}
+
+                        {activeTab === 'chat' && (
                             <div className="flex flex-col h-full">
                                 <div className="flex-1 overflow-y-auto space-y-2 mb-2">
                                     {doubts.map((d, i) => (
@@ -110,9 +146,34 @@ const CoursePlayer = () => {
                                         className="flex-1 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm outline-none focus:border-indigo-500"
                                         value={newDoubt}
                                         onChange={(e) => setNewDoubt(e.target.value)}
-                                        placeholder="Ask a doubt..."
+                                        placeholder="Ask friends..."
                                     />
                                     <button onClick={sendDoubt} className="bg-indigo-600 px-3 py-1 rounded text-sm hover:bg-indigo-700">Send</button>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'tutor' && (
+                            <div className="flex flex-col h-full">
+                                <div className="flex-1 overflow-y-auto space-y-3 mb-2">
+                                    {tutorMessages.length === 0 && (
+                                        <p className="text-center text-gray-500 text-sm mt-4">Ask me anything about your code!</p>
+                                    )}
+                                    {tutorMessages.map((msg, i) => (
+                                        <div key={i} className={`p-2 rounded max-w-[90%] text-sm ${msg.sender === 'me' ? 'bg-gray-700 self-end ml-auto' : 'bg-indigo-900 text-indigo-100 mr-auto'}`}>
+                                            {msg.text}
+                                        </div>
+                                    ))}
+                                    {isTutorTyping && <div className="text-gray-500 text-xs animate-pulse">AI is thinking...</div>}
+                                </div>
+                                <div className="flex gap-2">
+                                    <input
+                                        className="flex-1 bg-gray-900 border border-indigo-500/50 rounded px-2 py-1 text-sm outline-none focus:border-indigo-500"
+                                        value={tutorInput}
+                                        onChange={(e) => setTutorInput(e.target.value)}
+                                        placeholder="Explain this error..."
+                                    />
+                                    <button onClick={askTutor} className="bg-indigo-600 px-3 py-1 rounded text-sm hover:bg-indigo-700">Ask</button>
                                 </div>
                             </div>
                         )}
@@ -121,6 +182,7 @@ const CoursePlayer = () => {
 
                 {/* Right Panel: Code Sandbox */}
                 <div className="w-2/3 flex flex-col bg-gray-900">
+                    {/* ... (Same as before) ... */}
                     <div className="flex justify-between items-center px-4 py-2 border-b border-gray-700 bg-gray-800">
                         <span className="text-sm font-mono text-gray-400">main.js</span>
                         <button
@@ -146,7 +208,6 @@ const CoursePlayer = () => {
                         />
                     </div>
 
-                    {/* Console Output Block */}
                     <div className="h-32 bg-black border-t border-gray-700 p-3 font-mono text-sm overflow-auto">
                         {output ? (
                             <div>

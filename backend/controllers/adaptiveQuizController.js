@@ -1,9 +1,6 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const QuizSession = require('../models/QuizSession');
 const Course = require('../models/Course');
-const User = require('../models/User');
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const aiService = require('../services/aiAgentService');
 
 exports.startSession = async (req, res) => {
     const { courseId } = req.body;
@@ -30,69 +27,37 @@ exports.getNextQuestion = async (req, res) => {
         let feedback = null;
         let isCorrect = false;
 
-        // Evaluate previous answer if exists
+        // 1. Evaluate Previous Answer
         if (previousAnswer && session.history.length > 0) {
             const lastQuestion = session.history[session.history.length - 1];
 
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const evalPrompt = `
-        Question: "${lastQuestion.question}"
-        User Answer: "${previousAnswer}"
-        
-        Evaluate strictly: Is the answer correct? Return JSON: { "correct": boolean, "explanation": "string" }
-      `;
+            // Use LangChain Service
+            const evalResult = await aiService.evaluateAnswer(lastQuestion.question, previousAnswer);
 
-            const result = await model.generateContent(evalPrompt);
-            const response = await result.response;
-            const text = response.text();
+            isCorrect = evalResult.correct;
+            feedback = evalResult; // { correct, explanation, suggested_focus }
 
-            // Basic JSON parsing (Production should be more robust)
-            try {
-                const evalResult = JSON.parse(text.replace(/```json/g, '').replace(/```/g, ''));
-                isCorrect = evalResult.correct;
-                feedback = evalResult.explanation;
+            // Update History
+            lastQuestion.answer = previousAnswer;
+            lastQuestion.correct = isCorrect;
 
-                // Update Session
-                lastQuestion.answer = previousAnswer;
-                lastQuestion.correct = isCorrect;
-
-                if (isCorrect) {
-                    session.currentDifficulty = Math.min(10, session.currentDifficulty + 1);
-                } else {
-                    session.currentDifficulty = Math.max(1, session.currentDifficulty - 1);
-                }
-            } catch (e) {
-                console.error("Gemini Eval Parse Error", e);
-                // Fallback or retry logic
+            // Adjust Difficulty
+            if (isCorrect) {
+                session.currentDifficulty = Math.min(10, session.currentDifficulty + 1);
+            } else {
+                session.currentDifficulty = Math.max(1, session.currentDifficulty - 1);
             }
         }
 
-        // Generate New Question
+        // 2. Generate New Question
         const course = await Course.findById(session.courseId);
-        // Assuming course has a subject/topic. For now, use title or generic "Coding".
         const topic = course ? course.title : "General Programming";
 
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const questionPrompt = `
-      Generat 1 multiple choice question (MCQ) on the topic "${topic}".
-      Difficulty Level: ${session.currentDifficulty}/10.
-      Format: JSON { "question": "string", "options": ["A", "B", "C", "D"], "answer": "correct_option_string" }
-    `;
-
-        const qResult = await model.generateContent(questionPrompt);
-        const qResponse = await qResult.response;
-        const qText = qResponse.text();
-
-        let newQuestionData;
-        try {
-            newQuestionData = JSON.parse(qText.replace(/```json/g, '').replace(/```/g, ''));
-        } catch (e) {
-            return res.status(500).json({ message: "AI Generation Failed", error: e.message });
-        }
+        // Use LangChain Service
+        const newQuestionData = await aiService.generateQuestion(topic, session.currentDifficulty);
 
         session.history.push({
             question: newQuestionData.question,
-            // We don't store correct answer here to prevent cheating inspections if we returned whole history
         });
 
         await session.save();
@@ -105,6 +70,18 @@ exports.getNextQuestion = async (req, res) => {
         });
 
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: error.message });
+    }
+};
+
+exports.chatWithTutor = async (req, res) => {
+    const { message, codeContext, history } = req.body;
+    // history could be passed to maintain conversation state if we upgrade to ConversationChain
+    try {
+        const reply = await aiService.chatWithTutor(history, message, codeContext);
+        res.json({ reply });
+    } catch (error) {
+        res.status(500).json({ message: "AI Tutor Error" });
     }
 };
