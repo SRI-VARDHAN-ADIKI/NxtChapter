@@ -1,0 +1,17 @@
+# Dependency directories (This will ignore node_modules in ANY folder)
+node_modules/
+
+# Environment variables (This will ignore .env in ANY folder)
+.env
+.env.local
+
+# Frontend Build output (For when we build the React app)
+build/
+dist/
+
+# Optional npm cache and logs
+npm-debug.log*
+yarn-debug.log*
+
+# OS generated files
+.DS_Store
