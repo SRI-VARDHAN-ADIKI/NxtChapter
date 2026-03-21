@@ -5,6 +5,8 @@ import { connectDB } from './config/db.js';
 
 // Import Routes
 import evaluationRoutes from './routes/evaluationRoutes.js';
+import authRoutes from './routes/authRoutes.js'; 
+import questionRoutes from './routes/questionRoutes.js'; // <-- We added this
 
 // Load environment variables
 dotenv.config();
@@ -16,13 +18,14 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Allows us to accept JSON data in the body
+app.use(express.json());
 
 // Mount Routes
-// This means our submit endpoint is at: http://localhost:5000/api/evaluations/submit
 app.use('/api/evaluations', evaluationRoutes);
+app.use('/api/auth', authRoutes); 
+app.use('/api/questions', questionRoutes); // <-- We added this
 
-// Basic test route to check if server is up
+// Basic test route
 app.get('/', (req, res) => {
   res.send('NxtChapter API is running...');
 });
