@@ -17,6 +17,7 @@ export default function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [finalResult, setFinalResult] = useState(null);
+  const [error, setError] = useState('');
 
   const handleStart = async () => {
     setLoading(true);
@@ -28,7 +29,10 @@ export default function Quiz() {
       setMaxQuestions(data.maxQuestions);
       setScore(data.score);
       setQuizStarted(true);
-    } catch {} finally { setLoading(false); }
+    } catch (err) {
+      console.error('Quiz start failed:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to start quiz. Check backend logs.');
+    } finally { setLoading(false); }
   };
 
   const handleAnswer = async () => {
@@ -74,6 +78,12 @@ export default function Quiz() {
             This quiz adapts to your skill level in real-time. Answer correctly and the questions get harder. Miss one and they get easier.
           </p>
           <p className="text-text-muted text-sm mb-8">{maxQuestions} questions • AI-powered</p>
+
+          {error && (
+            <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm animate-fade-in flex items-center justify-center gap-2">
+              <span>⚠️</span> {error}
+            </div>
+          )}
           <button
             onClick={handleStart}
             disabled={loading}

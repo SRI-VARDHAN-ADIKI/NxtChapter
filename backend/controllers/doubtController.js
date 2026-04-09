@@ -3,7 +3,7 @@ import { Topic } from '../models/Topic.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
-  model: 'gemini-2.0-flash',
+  model: 'gemini-1.5-flash',
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 1024,
 });
@@ -27,7 +27,9 @@ The student asks: "${question}"
 
 Provide a clear, concise, and helpful answer. Use examples if needed. Keep it under 300 words.`;
 
+    console.log(`[AI Doubt] Processing question: "${question.substring(0, 50)}..."`);
     const response = await model.invoke(prompt);
+    console.log('[AI Doubt] Gemini response received');
     const aiResponse = response.content;
 
     const doubt = await Doubt.create({
@@ -41,6 +43,7 @@ Provide a clear, concise, and helpful answer. Use examples if needed. Keep it un
 
     res.status(201).json(doubt);
   } catch (error) {
+    console.error('[Doubt Error]', error);
     res.status(500).json({ message: 'Failed to process doubt', error: error.message });
   }
 };

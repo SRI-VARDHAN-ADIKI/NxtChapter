@@ -4,7 +4,7 @@ import { StudentProgress } from '../models/StudentProgress.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
-  model: 'gemini-2.0-flash',
+  model: 'gemini-1.5-flash',
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 2048,
 });
@@ -30,7 +30,9 @@ Rules:
 - All 4 options must be plausible
 - correctAnswer must exactly match one of the options`;
 
+  console.log(`[AI Quiz] Generating question for topic: ${topicTitle}, difficulty: ${difficulty}`);
   const response = await model.invoke(prompt);
+  console.log('[AI Quiz] Gemini response received');
   const text = response.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
   return JSON.parse(text);
 };
@@ -87,6 +89,7 @@ export const startQuiz = async (req, res) => {
       status: 'in_progress',
     });
   } catch (error) {
+    console.error('[Quiz Error]', error);
     res.status(500).json({ message: 'Failed to start quiz', error: error.message });
   }
 };
@@ -167,6 +170,7 @@ export const answerQuestion = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error('[Quiz Answer Error]', error);
     res.status(500).json({ message: 'Failed to process answer', error: error.message });
   }
 };

@@ -1,7 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import dns from 'node:dns';
 import { connectDB } from './config/db.js';
+
+dns.setDefaultResultOrder('ipv4first');
 
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
