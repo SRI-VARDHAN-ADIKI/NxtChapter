@@ -13,17 +13,30 @@ export default function AuthPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const handleSwitch = (toLogin) => {
+    setIsLogin(toLogin);
+    setError('');
+    setName('');
+    setEmail('');
+    setPassword('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSubmitting(true);
 
     try {
-      const payload = isLogin ? { email, password } : { name, email, password };
+      const payload = isLogin ? { email, password } : { name, email, password, role: 'student' };
       const { data } = isLogin ? await loginUser(payload) : await registerUser(payload);
 
+      if (data.role === 'admin') {
+        setError('Please use the Admin Portal to sign in as admin.');
+        return;
+      }
+
       login(data);
-      navigate(data.role === 'admin' ? '/admin' : '/dashboard');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
@@ -33,12 +46,14 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-primary relative overflow-hidden">
+      {/* Background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-accent-primary/10 rounded-full blur-[120px]" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent-secondary/8 rounded-full blur-[120px]" />
       </div>
 
       <div className="w-full max-w-md px-6 animate-fade-in relative z-10">
+        {/* Logo */}
         <div className="text-center mb-10">
           <Link to="/" className="inline-block">
             <h1 className="text-3xl font-bold tracking-tight">
@@ -47,15 +62,16 @@ export default function AuthPage() {
             </h1>
           </Link>
           <p className="text-text-secondary mt-2 text-sm">
-            {isLogin ? 'Sign in to continue your journey' : 'Create an account to get started'}
+            {isLogin ? 'Welcome back! Sign in to continue.' : 'Start your learning journey today.'}
           </p>
         </div>
 
         <div className="glass rounded-2xl p-8">
+          {/* Tab Toggle */}
           <div className="flex mb-8 bg-bg-primary/50 rounded-xl p-1">
             <button
               type="button"
-              onClick={() => { setIsLogin(true); setError(''); }}
+              onClick={() => handleSwitch(true)}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
                 isLogin ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/25' : 'text-text-secondary hover:text-text-primary'
               }`}
@@ -64,7 +80,7 @@ export default function AuthPage() {
             </button>
             <button
               type="button"
-              onClick={() => { setIsLogin(false); setError(''); }}
+              onClick={() => handleSwitch(false)}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
                 !isLogin ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/25' : 'text-text-secondary hover:text-text-primary'
               }`}
@@ -73,6 +89,7 @@ export default function AuthPage() {
             </button>
           </div>
 
+          {/* Error */}
           {error && (
             <div className="mb-6 p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm animate-fade-in">
               {error}
@@ -139,12 +156,30 @@ export default function AuthPage() {
           </form>
         </div>
 
-        <p className="text-center text-text-muted text-sm mt-6">
+        {/* Switch mode link */}
+        <p className="text-center text-text-muted text-sm mt-4">
           {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-          <button type="button" onClick={() => { setIsLogin(!isLogin); setError(''); }} className="text-accent-primary hover:text-accent-secondary transition-colors cursor-pointer">
+          <button
+            type="button"
+            onClick={() => handleSwitch(!isLogin)}
+            className="text-accent-primary hover:text-accent-secondary transition-colors cursor-pointer"
+          >
             {isLogin ? 'Sign up' : 'Sign in'}
           </button>
         </p>
+
+        {/* Admin Portal Link */}
+        <div className="text-center mt-6">
+          <Link
+            to="/admin/login"
+            className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-text-secondary transition-colors group"
+          >
+            <span className="w-px h-4 bg-border-default" />
+            <span>Are you an Admin?</span>
+            <span className="text-accent-primary group-hover:text-accent-secondary transition-colors font-medium">Sign in here →</span>
+            <span className="w-px h-4 bg-border-default" />
+          </Link>
+        </div>
       </div>
     </div>
   );

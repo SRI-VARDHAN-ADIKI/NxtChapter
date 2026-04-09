@@ -9,14 +9,13 @@ const generateToken = (id) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, adminSecret } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please add all fields' });
     }
 
     const userExists = await User.findOne({ email });
-
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -24,11 +23,19 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    let assignedRole = 'student';
+    if (role === 'admin') {
+      if (adminSecret !== process.env.ADMIN_SECRET_KEY) {
+        return res.status(403).json({ message: 'Invalid Admin Secret Key' });
+      }
+      assignedRole = 'admin';
+    }
+
     const userData = {
       name,
       email,
       password: hashedPassword,
-      role: role === 'admin' ? 'admin' : 'student',
+      role: assignedRole,
     };
 
     const user = await User.create(userData);

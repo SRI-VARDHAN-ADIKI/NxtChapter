@@ -14,6 +14,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import CourseManager from './pages/admin/CourseManager';
 import TopicManager from './pages/admin/TopicManager';
 import DoubtsManager from './pages/admin/DoubtsManager';
+import AdminAuthPage from './pages/admin/AdminAuthPage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/admin/login" element={<AdminAuthPage />} />
 
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/courses" element={<ProtectedRoute><MyCourses /></ProtectedRoute>} />

@@ -3,7 +3,7 @@ import { Topic } from '../models/Topic.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
-  model: 'gemini-1.5-flash',
+  model: 'gemini-flash-latest',
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 1024,
 });

@@ -4,10 +4,12 @@ import { StudentProgress } from '../models/StudentProgress.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
-  model: 'gemini-1.5-flash',
+  model: 'gemini-flash-latest',
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 2048,
 });
+
+console.log('[AI Config] Initialized with key starting with:', process.env.GEMINI_API_KEY?.substring(0, 10));
 
 const generateQuestion = async (topicTitle, difficulty) => {
   const difficultyLabel = difficulty <= 2 ? 'easy' : difficulty <= 4 ? 'medium' : 'hard';
@@ -31,7 +33,13 @@ Rules:
 - correctAnswer must exactly match one of the options`;
 
   console.log(`[AI Quiz] Generating question for topic: ${topicTitle}, difficulty: ${difficulty}`);
-  const response = await model.invoke(prompt);
+  
+  // Add a 20-second timeout to the AI call
+  const timeoutPromise = new Promise((_, reject) => 
+    setTimeout(() => reject(new Error('AI Generation Timeout')), 20000)
+  );
+
+  const response = await Promise.race([model.invoke(prompt), timeoutPromise]);
   console.log('[AI Quiz] Gemini response received');
   const text = response.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
   return JSON.parse(text);
