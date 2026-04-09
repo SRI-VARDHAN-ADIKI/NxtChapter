@@ -3,9 +3,8 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // <-- Added password field
-  
-  // Elo-style rating system starts here
+  password: { type: String, required: true },
+  role: { type: String, enum: ['student', 'admin'], default: 'student' },
   skillRating: { type: Number, default: 1000 },
   recentWeakPoints: [{ type: String }],
   totalQuestionsAnswered: { type: Number, default: 0 }

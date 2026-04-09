@@ -1,33 +1,52 @@
+import { CodingQuestion } from '../models/CodingQuestion.js';
 import { User } from '../models/User.js';
-import { Question } from '../models/Question.js';
 import { Submission } from '../models/Submission.js';
 import { evaluateSubmissionCode } from '../services/aiAgentService.js';
 
-export const submitAnswer = async (req, res) => {
+export const getCodingQuestions = async (req, res) => {
+  try {
+    const questions = await CodingQuestion.find({ topicId: req.params.topicId }).sort({ difficultyRating: 1 });
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const addCodingQuestion = async (req, res) => {
+  try {
+    const { title, description, topic, difficultyRating, topicId } = req.body;
+    if (!title || !description || !topic || !difficultyRating || !topicId) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const question = await CodingQuestion.create({ title, description, topic, difficultyRating, topicId });
+    res.status(201).json(question);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const evaluateCode = async (req, res) => {
   try {
     const { userId, questionId, userCode } = req.body;
 
     const user = await User.findById(userId);
-    const question = await Question.findById(questionId);
+    const question = await CodingQuestion.findById(questionId);
 
     if (!user || !question) {
-      return res.status(404).json({ message: "User or Question not found" });
+      return res.status(404).json({ message: 'User or Question not found' });
     }
 
-    const aiResult = await evaluateSubmissionCode(
-      question.title, 
-      question.description, 
-      userCode
-    );
+    const aiResult = await evaluateSubmissionCode(question.title, question.description, userCode);
 
     const K = 32;
     const expectedScore = 1 / (1 + Math.pow(10, (question.difficultyRating - user.skillRating) / 400));
     const pointChange = Math.round(K * (aiResult.overallScore - expectedScore));
-    
+
     const oldElo = user.skillRating;
     user.skillRating += pointChange;
     user.totalQuestionsAnswered += 1;
-    
+
     if (aiResult.weakPoints && aiResult.weakPoints.length > 0) {
       user.recentWeakPoints.push(...aiResult.weakPoints);
       if (user.recentWeakPoints.length > 5) {
@@ -46,21 +65,19 @@ export const submitAnswer = async (req, res) => {
       aiScore: aiResult.overallScore,
       pointsEarned: pointChange,
       feedback: aiResult.feedback,
-      codeSubmitted: userCode
+      codeSubmitted: userCode,
     });
 
     res.status(200).json({
       syntaxScore: parseInt(aiResult.syntaxAccuracy) || 0,
       conceptScore: parseInt(aiResult.conceptMastery) || 0,
       aiFeedback: aiResult.feedback,
-      oldElo: oldElo,
+      oldElo,
       newElo: user.skillRating,
       state: 'evaluated',
-      submissionId: submission._id
+      submissionId: submission._id,
     });
-
   } catch (error) {
-    console.error("Submission Error:", error);
-    res.status(500).json({ message: "Server Error during submission", error: error.message });
+    res.status(500).json({ message: 'Server Error during evaluation', error: error.message });
   }
 };

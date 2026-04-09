@@ -16,6 +16,7 @@
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.3",
     "langchain": "^1.2.35",
+    "mongodb": "^7.1.0",
     "mongoose": "^8.7.3"
   },
   "devDependencies": {

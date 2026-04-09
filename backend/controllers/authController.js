@@ -1,45 +1,54 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { User } from '../models/User.js';
+import { usersStorage } from '../services/storageService.js';
 
-// Helper function to generate a secure token
+const isDBConnected = () => mongoose.connection.readyState === 1;
+
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
-  });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// 1. Register a new student
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please add all fields' });
     }
 
-    // Check if user already exists
-    const userExists = await User.findOne({ email });
+    const userExists = isDBConnected() 
+      ? await User.findOne({ email })
+      : await usersStorage.findOne({ email });
+
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash the password for security
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create the user
-    const user = await User.create({
+    const userData = {
       name,
       email,
       password: hashedPassword,
-    });
+      role: role === 'admin' ? 'admin' : 'student',
+    };
+
+    const user = isDBConnected()
+      ? await User.create(userData)
+      : await usersStorage.create(userData);
 
     if (user) {
       res.status(201).json({
         _id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
+        skillRating: user.skillRating,
+        totalQuestionsAnswered: user.totalQuestionsAnswered,
+        recentWeakPoints: user.recentWeakPoints,
         token: generateToken(user._id),
       });
     } else {
@@ -50,20 +59,22 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// 2. Login an existing student
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const user = isDBConnected()
+      ? await User.findOne({ email })
+      : await usersStorage.findOne({ email });
 
-    // Find the user by email
-    const user = await User.findOne({ email });
-
-    // Check if user exists AND passwords match
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
+        skillRating: user.skillRating,
+        totalQuestionsAnswered: user.totalQuestionsAnswered,
+        recentWeakPoints: user.recentWeakPoints,
         token: generateToken(user._id),
       });
     } else {

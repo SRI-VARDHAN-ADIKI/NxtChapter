@@ -1,0 +1,151 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { loginUser, registerUser } from '../services/api';
+
+export default function AuthPage() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+
+    try {
+      const payload = isLogin ? { email, password } : { name, email, password };
+      const { data } = isLogin ? await loginUser(payload) : await registerUser(payload);
+
+      login(data);
+      navigate(data.role === 'admin' ? '/admin' : '/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-bg-primary relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-accent-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent-secondary/8 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="w-full max-w-md px-6 animate-fade-in relative z-10">
+        <div className="text-center mb-10">
+          <Link to="/" className="inline-block">
+            <h1 className="text-3xl font-bold tracking-tight">
+              <span className="text-accent-primary">Nxt</span>
+              <span className="text-text-primary">Chapter</span>
+            </h1>
+          </Link>
+          <p className="text-text-secondary mt-2 text-sm">
+            {isLogin ? 'Sign in to continue your journey' : 'Create an account to get started'}
+          </p>
+        </div>
+
+        <div className="glass rounded-2xl p-8">
+          <div className="flex mb-8 bg-bg-primary/50 rounded-xl p-1">
+            <button
+              type="button"
+              onClick={() => { setIsLogin(true); setError(''); }}
+              className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
+                isLogin ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/25' : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => { setIsLogin(false); setError(''); }}
+              className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
+                !isLogin ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/25' : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm animate-fade-in">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {!isLogin && (
+              <div className="animate-fade-in">
+                <label htmlFor="name" className="block text-sm font-medium text-text-secondary mb-2">Full Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  required={!isLogin}
+                  className="w-full px-4 py-3 bg-bg-primary/80 border border-border-default rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/50 transition-all"
+                />
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-2">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                className="w-full px-4 py-3 bg-bg-primary/80 border border-border-default rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/50 transition-all"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-2">Password</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                minLength={6}
+                className="w-full px-4 py-3 bg-bg-primary/80 border border-border-default rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/50 transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3.5 bg-accent-primary hover:bg-accent-secondary text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-accent-primary/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {submitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  {isLogin ? 'Signing in...' : 'Creating account...'}
+                </span>
+              ) : (
+                isLogin ? 'Sign In' : 'Create Account'
+              )}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-text-muted text-sm mt-6">
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+          <button type="button" onClick={() => { setIsLogin(!isLogin); setError(''); }} className="text-accent-primary hover:text-accent-secondary transition-colors cursor-pointer">
+            {isLogin ? 'Sign up' : 'Sign in'}
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
