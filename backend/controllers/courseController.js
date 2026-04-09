@@ -1,15 +1,11 @@
 import mongoose from 'mongoose';
 import { Course } from '../models/Course.js';
 import { Topic } from '../models/Topic.js';
-import { coursesStorage, topicsStorage } from '../services/storageService.js';
-
-const isDBConnected = () => mongoose.connection.readyState === 1;
+// Remove storageService and isDBConnected
 
 export const getCourses = async (req, res) => {
   try {
-    const courses = isDBConnected()
-      ? await Course.find().populate('createdBy', 'name').sort({ createdAt: -1 })
-      : await coursesStorage.getAll();
+    const courses = await Course.find().populate('createdBy', 'name').sort({ createdAt: -1 });
     res.json(courses);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -18,17 +14,13 @@ export const getCourses = async (req, res) => {
 
 export const getCourseById = async (req, res) => {
   try {
-    const course = isDBConnected()
-      ? await Course.findById(req.params.id).populate('createdBy', 'name')
-      : await coursesStorage.findById(req.params.id);
+    const course = await Course.findById(req.params.id).populate('createdBy', 'name');
     
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
-    const topics = isDBConnected()
-      ? await Topic.find({ courseId: course._id }).sort({ order: 1 })
-      : (await topicsStorage.getAll()).filter(t => t.courseId === (course._id || course.id));
+    const topics = await Topic.find({ courseId: course._id }).sort({ order: 1 });
     
-    res.json(isDBConnected() ? { ...course.toObject(), topics } : { ...course, topics });
+    res.json({ ...course.toObject(), topics });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -48,9 +40,7 @@ export const createCourse = async (req, res) => {
       createdBy: req.user._id || req.user.id,
     };
 
-    const course = isDBConnected()
-      ? await Course.create(userData)
-      : await coursesStorage.create(userData);
+    const course = await Course.create(userData);
 
     res.status(201).json(course);
   } catch (error) {

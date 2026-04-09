@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
-import { initStorage } from './services/initStorage.js';
 
 import authRoutes from './routes/authRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
@@ -14,7 +13,6 @@ import progressRoutes from './routes/progressRoutes.js';
 
 dotenv.config();
 connectDB();
-initStorage();
 
 const app = express();
 

@@ -2,9 +2,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { User } from '../models/User.js';
-import { usersStorage } from '../services/storageService.js';
-
-const isDBConnected = () => mongoose.connection.readyState === 1;
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -18,9 +15,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Please add all fields' });
     }
 
-    const userExists = isDBConnected() 
-      ? await User.findOne({ email })
-      : await usersStorage.findOne({ email });
+    const userExists = await User.findOne({ email });
 
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
@@ -36,9 +31,7 @@ export const registerUser = async (req, res) => {
       role: role === 'admin' ? 'admin' : 'student',
     };
 
-    const user = isDBConnected()
-      ? await User.create(userData)
-      : await usersStorage.create(userData);
+    const user = await User.create(userData);
 
     if (user) {
       res.status(201).json({
@@ -62,9 +55,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = isDBConnected()
-      ? await User.findOne({ email })
-      : await usersStorage.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({

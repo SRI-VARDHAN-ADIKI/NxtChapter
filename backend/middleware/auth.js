@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { User } from '../models/User.js';
-import { usersStorage } from '../services/storageService.js';
-
-const isDBConnected = () => mongoose.connection.readyState === 1;
 
 export const protect = async (req, res, next) => {
   try {
@@ -14,14 +11,8 @@ export const protect = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded Token ID:', decoded.id);
     
-    if (isDBConnected()) {
-      req.user = await User.findById(decoded.id).select('-password');
-    } else {
-      req.user = await usersStorage.findById(decoded.id);
-      console.log('Lookup in Storage for ID:', decoded.id, 'Result:', req.user ? 'Found' : 'Not Found');
-    }
+    req.user = await User.findById(decoded.id).select('-password');
 
     if (!req.user) {
       console.log('User not found for token ID:', decoded.id);
