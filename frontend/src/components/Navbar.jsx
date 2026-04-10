@@ -15,6 +15,7 @@ export default function Navbar() {
   const studentLinks = [
     { to: '/dashboard', label: 'Dashboard' },
     { to: '/courses', label: 'My Courses' },
+    { to: '/interview', label: '🎥 Interview' },
     { to: '/doubts', label: 'Doubts' },
   ];
 

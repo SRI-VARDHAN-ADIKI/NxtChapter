@@ -14,6 +14,7 @@ import quizRoutes from './routes/quizRoutes.js';
 import doubtRoutes from './routes/doubtRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import voiceTutorRoutes from './routes/voiceTutorRoutes.js';
+import interviewRoutes from './routes/interviewRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -31,6 +32,7 @@ app.use('/api/quiz', quizRoutes);
 app.use('/api/doubts', doubtRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/voice-tutor', voiceTutorRoutes);
+app.use('/api/interview', interviewRoutes);
 
 app.get('/', (req, res) => {
   res.send('NxtChapter API is running...');

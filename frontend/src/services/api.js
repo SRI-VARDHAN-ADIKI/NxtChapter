@@ -46,4 +46,9 @@ export const updateProgress = (data) => api.put('/progress/update', data);
 
 export const askVoiceTutor = (data) => api.post('/voice-tutor/ask', data);
 
+export const startInterview = (data) => api.post('/interview/start', data);
+export const answerInterview = (data) => api.post('/interview/answer', data);
+export const getInterviewHistory = () => api.get('/interview/history');
+export const getInterviewResult = (attemptId) => api.get(`/interview/result/${attemptId}`);
+
 export default api;

@@ -15,6 +15,9 @@ import CourseManager from './pages/admin/CourseManager';
 import TopicManager from './pages/admin/TopicManager';
 import DoubtsManager from './pages/admin/DoubtsManager';
 import AdminAuthPage from './pages/admin/AdminAuthPage';
+import InterviewPrep from './pages/InterviewPrep';
+import InterviewSession from './pages/InterviewSession';
+import InterviewReport from './pages/InterviewReport';
 
 export default function App() {
   return (
@@ -31,6 +34,9 @@ export default function App() {
           <Route path="/topic/:topicId/coding" element={<ProtectedRoute><CodingArena /></ProtectedRoute>} />
           <Route path="/topic/:topicId/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
           <Route path="/doubts" element={<ProtectedRoute><Doubts /></ProtectedRoute>} />
+          <Route path="/interview" element={<ProtectedRoute><InterviewPrep /></ProtectedRoute>} />
+          <Route path="/interview/session" element={<ProtectedRoute><InterviewSession /></ProtectedRoute>} />
+          <Route path="/interview/report/:attemptId" element={<ProtectedRoute><InterviewReport /></ProtectedRoute>} />
 
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/courses" element={<AdminRoute><CourseManager /></AdminRoute>} />
