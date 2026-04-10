@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getTopicById, updateProgress } from '../services/api';
 import Navbar from '../components/Navbar';
+import VoiceTutor from '../components/VoiceTutor';
 
 export default function TopicView() {
   const { topicId } = useParams();
@@ -201,6 +202,9 @@ export default function TopicView() {
           )}
         </div>
       </main>
+
+      {/* AI Voice Tutor */}
+      <VoiceTutor topicId={topicId} topicTitle={topic?.title} />
     </div>
   );
 }

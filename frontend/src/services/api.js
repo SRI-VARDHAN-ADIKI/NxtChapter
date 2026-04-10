@@ -44,4 +44,6 @@ export const resolveDoubt = (id, data) => api.put(`/doubts/${id}/resolve`, data)
 export const getCourseProgress = (courseId) => api.get(`/progress/${courseId}`);
 export const updateProgress = (data) => api.put('/progress/update', data);
 
+export const askVoiceTutor = (data) => api.post('/voice-tutor/ask', data);
+
 export default api;
