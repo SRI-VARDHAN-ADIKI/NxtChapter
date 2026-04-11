@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { getCourses, getMyGamification } from '../services/api';
+import { 
+  Zap, 
+  Flame, 
+  Award, 
+  TrendingUp, 
+  BookOpen, 
+  ChevronRight 
+} from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -40,7 +45,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           <div className="glass rounded-2xl p-6 animate-slide-up bg-accent-primary/5">
             <div className="flex justify-between items-start mb-3">
-              <span className="text-2xl">⚡</span>
+              <Zap className="w-8 h-8 text-accent-primary" fill="currentColor" />
               <div className="text-right">
                 <span className="text-[10px] uppercase font-bold text-accent-primary tracking-widest">Level</span>
                 <p className="text-xl font-black text-white">{gamification?.level || 1}</p>
@@ -56,13 +61,13 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.05s' }}>
-            <span className="text-2xl mb-3 block">🔥</span>
+            <Flame className="w-8 h-8 text-orange-400 mb-3" fill="currentColor" />
             <p className="text-sm text-text-secondary mb-1">Daily Streak</p>
             <p className="text-3xl font-bold text-text-primary">{gamification?.streak || 0} Days</p>
             <p className="text-[10px] text-text-muted mt-2 uppercase tracking-tight">Best: {gamification?.longestStreak || 0} days</p>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <span className="text-2xl mb-3 block">🏅</span>
+            <Award className="w-8 h-8 text-yellow-400 mb-3" fill="currentColor" />
             <p className="text-sm text-text-secondary mb-1">Badges Earned</p>
             <p className="text-3xl font-bold text-text-primary">{gamification?.badges?.length || 0}</p>
             <div className="flex gap-1 mt-2">
@@ -72,7 +77,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.15s' }}>
-            <span className="text-2xl mb-3 block">📈</span>
+            <TrendingUp className="w-8 h-8 text-blue-400 mb-3" />
             <p className="text-sm text-text-secondary mb-1">Skill Rating</p>
             <p className="text-3xl font-bold text-text-primary">{user?.skillRating || 1000}</p>
             <p className={`text-[10px] mt-2 uppercase font-bold tracking-tight ${tier.color}`}>{tier.name}</p>
@@ -95,8 +100,8 @@ export default function Dashboard() {
         <div className="animate-slide-up" style={{ animationDelay: '0.25s' }}>
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-text-primary">My Courses</h3>
-            <Link to="/courses" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors">
-              View All →
+            <Link to="/courses" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors flex items-center gap-1">
+              View All <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -117,7 +122,7 @@ export default function Dashboard() {
                     {course.thumbnail ? (
                       <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover rounded-xl" />
                     ) : (
-                      <span className="text-4xl">📘</span>
+                      <BookOpen className="w-12 h-12 text-text-muted" />
                     )}
                   </div>
                   <h4 className="font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">{course.title}</h4>

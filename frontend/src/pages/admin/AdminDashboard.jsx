@@ -1,6 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { getCourses, getEscalatedDoubts } from '../../services/api';
+import { 
+  BookOpen, 
+  MessageSquareQuestion, 
+  CheckCircle2, 
+  ChevronRight,
+  ArrowRight 
+} from 'lucide-react';
 
 export default function AdminDashboard() {
   const [courses, setCourses] = useState([]);
@@ -36,17 +41,17 @@ export default function AdminDashboard() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
               <div className="glass rounded-2xl p-6 animate-slide-up">
-                <span className="text-2xl mb-3 block">📚</span>
+                <BookOpen className="w-8 h-8 text-accent-primary mb-3" />
                 <p className="text-sm text-text-secondary mb-1">Total Courses</p>
                 <p className="text-3xl font-bold text-text-primary">{courses.length}</p>
               </div>
               <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.05s' }}>
-                <span className="text-2xl mb-3 block">❓</span>
+                <MessageSquareQuestion className="w-8 h-8 text-warning mb-3" />
                 <p className="text-sm text-text-secondary mb-1">Pending Doubts</p>
                 <p className="text-3xl font-bold text-warning">{pendingDoubts}</p>
               </div>
               <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                <span className="text-2xl mb-3 block">✅</span>
+                <CheckCircle2 className="w-8 h-8 text-success mb-3" />
                 <p className="text-sm text-text-secondary mb-1">Resolved Doubts</p>
                 <p className="text-3xl font-bold text-success">{doubts.filter((d) => d.status === 'mentor_resolved').length}</p>
               </div>
@@ -56,8 +61,8 @@ export default function AdminDashboard() {
               <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.15s' }}>
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="text-lg font-semibold text-text-primary">Courses</h3>
-                  <Link to="/admin/courses" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors">
-                    Manage →
+                  <Link to="/admin/courses" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors flex items-center gap-1">
+                    Manage <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
                 {courses.length === 0 ? (
@@ -71,7 +76,7 @@ export default function AdminDashboard() {
                         className="flex items-center justify-between p-3 bg-bg-primary/50 rounded-xl hover:bg-bg-tertiary transition-colors"
                       >
                         <span className="text-sm font-medium text-text-primary">{course.title}</span>
-                        <span className="text-xs text-text-muted">→</span>
+                        <ArrowRight className="w-4 h-4 text-text-muted" />
                       </Link>
                     ))}
                   </div>
@@ -81,8 +86,8 @@ export default function AdminDashboard() {
               <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="text-lg font-semibold text-text-primary">Recent Doubts</h3>
-                  <Link to="/admin/doubts" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors">
-                    View All →
+                  <Link to="/admin/doubts" className="text-sm text-accent-primary hover:text-accent-secondary transition-colors flex items-center gap-1">
+                    View All <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
                 {doubts.length === 0 ? (

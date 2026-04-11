@@ -1,7 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../services/api';
-import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
+import { 
+  Bell, 
+  Award, 
+  Flame, 
+  MessageCircle, 
+  BookOpen, 
+  Target 
+} from 'lucide-react';
 
 export default function NotificationBell() {
   const { user } = useAuth();
@@ -81,12 +86,12 @@ export default function NotificationBell() {
 
   const getTypeIcon = (type) => {
     switch(type) {
-      case 'badge': return '🏅';
-      case 'streak': return '🔥';
-      case 'reply': return '💬';
-      case 'course_added': return '📚';
-      case 'quiz_result': return '🎯';
-      default: return '🔔';
+      case 'badge': return <Award className="w-5 h-5 text-yellow-400" />;
+      case 'streak': return <Flame className="w-5 h-5 text-orange-400" />;
+      case 'reply': return <MessageCircle className="w-5 h-5 text-accent-primary" />;
+      case 'course_added': return <BookOpen className="w-5 h-5 text-success" />;
+      case 'quiz_result': return <Target className="w-5 h-5 text-info" />;
+      default: return <Bell className="w-5 h-5 text-text-secondary" />;
     }
   };
 
@@ -94,9 +99,9 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="relative w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg hover:bg-white/10 transition-all cursor-pointer"
+        className="relative w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all cursor-pointer group"
       >
-        <span>🔔</span>
+        <Bell className={`w-5 h-5 transition-colors ${unreadCount > 0 ? 'text-accent-primary' : 'text-text-secondary group-hover:text-white'}`} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-secondary">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -130,7 +135,7 @@ export default function NotificationBell() {
                   onClick={() => !n.isRead && handleMarkRead(n._id)}
                   className={`px-5 py-4 border-b border-white/5 transition-colors cursor-pointer flex gap-4 ${n.isRead ? 'opacity-60' : 'bg-accent-primary/[0.03] opacity-100 hover:bg-accent-primary/[0.06]'}`}
                 >
-                  <div className="text-xl shrink-0 mt-1">{getTypeIcon(n.type)}</div>
+                  <div className="shrink-0 mt-1">{getTypeIcon(n.type)}</div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-bold text-white mb-1">{n.title}</p>
                     <p className="text-[11px] text-text-secondary leading-normal mb-2">{n.message}</p>

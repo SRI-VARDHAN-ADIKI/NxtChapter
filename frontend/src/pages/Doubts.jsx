@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { askDoubt, escalateDoubt, getStudentDoubts } from '../services/api';
+import { MessageSquare, Bot, User, ArrowRight } from 'lucide-react';
 
 export default function Doubts() {
   const [doubts, setDoubts] = useState([]);
@@ -81,7 +82,7 @@ export default function Doubts() {
           </div>
         ) : doubts.length === 0 ? (
           <div className="glass rounded-2xl p-12 text-center">
-            <span className="text-5xl mb-4 block">💬</span>
+            <MessageSquare className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
             <p className="text-text-secondary">No doubts asked yet. Ask your first question above!</p>
           </div>
         ) : (
@@ -99,14 +100,14 @@ export default function Doubts() {
 
                   {doubt.aiResponse && (
                     <div className="bg-bg-primary/50 rounded-xl p-4 mb-3">
-                      <p className="text-xs text-info font-medium mb-2">🤖 AI Response</p>
+                      <p className="text-xs text-info font-medium mb-2 flex items-center gap-1.5"><Bot className="w-4 h-4" /> AI Response</p>
                       <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{doubt.aiResponse}</p>
                     </div>
                   )}
 
                   {doubt.mentorResponse && (
                     <div className="bg-success/5 border border-success/10 rounded-xl p-4 mb-3">
-                      <p className="text-xs text-success font-medium mb-2">👨‍🏫 Mentor Response ({doubt.mentorId?.name || 'Mentor'})</p>
+                      <p className="text-xs text-success font-medium mb-2 flex items-center gap-1.5"><User className="w-4 h-4" /> Mentor Response ({doubt.mentorId?.name || 'Mentor'})</p>
                       <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{doubt.mentorResponse}</p>
                     </div>
                   )}
@@ -116,7 +117,7 @@ export default function Doubts() {
                       onClick={() => handleEscalate(doubt._id)}
                       className="text-xs text-warning hover:text-warning/80 transition-colors cursor-pointer mt-2"
                     >
-                      Not satisfied? Escalate to Mentor →
+                      Not satisfied? Escalate to Mentor <ArrowRight className="w-3 h-3 inline" />
                     </button>
                   )}
 

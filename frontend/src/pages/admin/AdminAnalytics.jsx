@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { getAdminAnalytics } from '../../services/api';
-import Navbar from '../../components/Navbar';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area 
@@ -34,7 +33,6 @@ export default function AdminAnalytics() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
       <main className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>

@@ -1,8 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getTopicById, updateProgress } from '../services/api';
 import VoiceTutor from '../components/VoiceTutor';
 import DiscussionView from '../components/DiscussionView';
+import { 
+  Video, 
+  FileText, 
+  Code2, 
+  Brain, 
+  CheckCircle2, 
+  ChevronLeft 
+} from 'lucide-react';
 
 export default function TopicView() {
   const { topicId } = useParams();
@@ -26,10 +31,10 @@ export default function TopicView() {
   };
 
   const tabs = [
-    { id: 'video', label: '🎬 Video', icon: '🎬' },
-    { id: 'cheatsheet', label: '📄 Cheatsheet', icon: '📄' },
-    { id: 'coding', label: '💻 Coding', icon: '💻' },
-    { id: 'quiz', label: '🧠 Quiz', icon: '🧠' },
+    { id: 'video', label: 'Video', icon: Video },
+    { id: 'cheatsheet', label: 'Cheatsheet', icon: FileText },
+    { id: 'coding', label: 'Coding', icon: Code2 },
+    { id: 'quiz', label: 'Quiz', icon: Brain },
   ];
 
   if (loading) {
@@ -56,8 +61,8 @@ export default function TopicView() {
     <div className="min-h-screen bg-bg-primary">
 
       <main className="max-w-5xl mx-auto px-6 py-10">
-        <Link to={`/courses/${topic.courseId}`} className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 inline-block">
-          ← Back to Course
+        <Link to={`/courses/${topic.courseId}`} className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 flex items-center gap-1">
+          <ChevronLeft className="w-4 h-4" /> Back to Course
         </Link>
 
         <h2 className="text-2xl font-bold text-text-primary mb-6 animate-fade-in">{topic.title}</h2>
@@ -67,12 +72,13 @@ export default function TopicView() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 whitespace-nowrap cursor-pointer ${
+              className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 whitespace-nowrap cursor-pointer flex items-center gap-2 ${
                 activeTab === tab.id
                   ? 'bg-accent-primary text-white shadow-lg shadow-accent-primary/20'
                   : 'text-text-secondary hover:text-text-primary'
               }`}
             >
+              <tab.icon className="w-4 h-4" />
               {tab.label}
             </button>
           ))}
@@ -117,7 +123,7 @@ export default function TopicView() {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <span className="text-5xl mb-4 block">🎬</span>
+                  <Video className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
                   <p className="text-text-secondary">No video uploaded for this topic yet.</p>
                 </div>
               )}
@@ -133,14 +139,14 @@ export default function TopicView() {
                   </div>
                   <button
                     onClick={() => markComplete('cheatsheetRead')}
-                    className="mt-6 px-6 py-2.5 bg-success/15 text-success border border-success/20 rounded-xl text-sm font-medium hover:bg-success/25 transition-colors cursor-pointer"
+                    className="mt-6 px-6 py-2.5 bg-success/15 text-success border border-success/20 rounded-xl text-sm font-medium hover:bg-success/25 transition-colors cursor-pointer flex items-center gap-2"
                   >
-                    ✓ Mark as Read
+                    <CheckCircle2 className="w-4 h-4" /> Mark as Read
                   </button>
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <span className="text-5xl mb-4 block">📄</span>
+                  <FileText className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
                   <p className="text-text-secondary">No cheatsheet available for this topic yet.</p>
                 </div>
               )}
@@ -175,7 +181,7 @@ export default function TopicView() {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <span className="text-5xl mb-4 block">💻</span>
+                  <Code2 className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
                   <p className="text-text-secondary">No coding questions for this topic yet.</p>
                 </div>
               )}
@@ -184,7 +190,7 @@ export default function TopicView() {
 
           {activeTab === 'quiz' && (
             <div className="glass rounded-2xl p-8 text-center">
-              <span className="text-5xl mb-4 block">🧠</span>
+              <Brain className="w-12 h-12 text-accent-primary mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-text-primary mb-2">Adaptive AI Quiz</h3>
               <p className="text-text-secondary mb-6 max-w-md mx-auto">
                 Take an AI-generated quiz that adapts to your skill level. Start easy and progress based on your answers.

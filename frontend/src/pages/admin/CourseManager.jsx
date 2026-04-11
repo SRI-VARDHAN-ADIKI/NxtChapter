@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCourses, createCourse, updateCourse, deleteCourse } from '../../services/api';
-import Navbar from '../../components/Navbar';
 
 export default function CourseManager() {
   const [courses, setCourses] = useState([]);
@@ -56,7 +55,6 @@ export default function CourseManager() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-8 animate-fade-in">

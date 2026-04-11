@@ -2,6 +2,20 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { getMyGamification } from '../services/api';
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  Brain, 
+  Trophy, 
+  Video, 
+  MessageSquareQuestion, 
+  Home, 
+  Folder, 
+  BarChart2, 
+  MessagesSquare,
+  Flame,
+  ChevronRight
+} from 'lucide-react';
 
 export default function Sidebar({ isExpanded, setIsExpanded }) {
   const { user } = useAuth();
@@ -18,19 +32,19 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
   }, [user, isAdmin]);
 
   const studentLinks = [
-    { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { to: '/courses', label: 'My Courses', icon: '📚' },
-    { to: '/skill-tree', label: '🧠 Skill Tree', icon: '🧠' },
-    { to: '/leaderboard', label: '🏆 Leaderboard', icon: '🏆' },
-    { to: '/interview', label: '🎥 Interview', icon: '🎥' },
-    { to: '/doubts', label: 'Doubts', icon: '❓' },
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/courses', label: 'My Courses', icon: BookOpen },
+    { to: '/skill-tree', label: 'Skill Tree', icon: Brain },
+    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+    { to: '/interview', label: 'Interview', icon: Video },
+    { to: '/doubts', label: 'Doubts', icon: MessageSquareQuestion },
   ];
 
   const adminLinks = [
-    { to: '/admin', label: 'Overview', icon: '🏠' },
-    { to: '/admin/courses', label: 'Course Mgr', icon: '📂' },
-    { to: '/admin/analytics', label: 'Analytics', icon: '📈' },
-    { to: '/admin/doubts', label: 'Doubts Mgr', icon: '💬' },
+    { to: '/admin', label: 'Overview', icon: Home },
+    { to: '/admin/courses', label: 'Course Mgr', icon: Folder },
+    { to: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
+    { to: '/admin/doubts', label: 'Doubts Mgr', icon: MessagesSquare },
   ];
 
   const links = isAdmin ? adminLinks : studentLinks;
@@ -65,7 +79,7 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
                   : 'text-text-secondary hover:bg-white/5 hover:text-white'
               }`}
             >
-              <span className="text-xl shrink-0 group-hover:scale-110 transition-transform">{link.icon}</span>
+              <link.icon className={`shrink-0 transition-transform group-hover:scale-110 ${isExpanded ? 'w-5 h-5' : 'w-6 h-6'}`} strokeWidth={isActive ? 2.5 : 2} />
               <span className={`text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 {link.label}
               </span>
@@ -84,10 +98,10 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
       {!isAdmin && isExpanded && gamification && (
         <div className="p-4 mx-3 mb-4 bg-white/[0.02] border border-white/5 rounded-2xl animate-fade-in">
           <div className="flex justify-between items-center mb-3">
-             <div className="flex items-center gap-2">
-                <span className="text-xs">🔥</span>
+              <div className="flex items-center gap-2">
+                <Flame className="w-4 h-4 text-orange-400" fill="currentColor" />
                 <span className="text-xs font-bold text-orange-400">{gamification.streak} Day Streak</span>
-             </div>
+              </div>
              <span className="text-[10px] font-bold text-text-muted">Lv. {gamification.level}</span>
           </div>
           <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
@@ -102,9 +116,9 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full p-2 bg-white/5 border border-white/5 rounded-xl text-text-muted hover:text-white hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center"
         >
-          <span className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'rotate-0'}`}>
-            ➜
-          </span>
+          <ChevronRight 
+            className={`w-5 h-5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'rotate-0'}`} 
+          />
         </button>
       </div>
     </aside>

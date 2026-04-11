@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getCourses, getInterviewHistory } from '../services/api';
+import { 
+  Video, 
+  Settings, 
+  Edit3, 
+  Play, 
+  ClipboardList, 
+  Mic, 
+  CheckCircle2, 
+  Clock 
+} from 'lucide-react';
 
 export default function InterviewPrep() {
   const navigate = useNavigate();
@@ -36,7 +46,7 @@ export default function InterviewPrep() {
         <div className="text-center mb-12 animate-fade-in">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-5"
             style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))', border: '1px solid rgba(99,102,241,0.25)' }}>
-            <span className="text-4xl">🎥</span>
+            <Video className="w-10 h-10 text-accent-primary" />
           </div>
           <h1 className="text-3xl font-bold text-text-primary mb-3">Interview Prep</h1>
           <p className="text-text-secondary max-w-lg mx-auto">
@@ -47,7 +57,7 @@ export default function InterviewPrep() {
         {/* Setup Card */}
         <div className="glass rounded-2xl p-8 mb-10 max-w-2xl mx-auto animate-slide-up">
           <h2 className="text-lg font-semibold text-text-primary mb-6 flex items-center gap-2">
-            <span>⚙️</span> Configure Interview
+            <Settings className="w-5 h-5" /> Configure Interview
           </h2>
 
           {/* Topic Selection */}
@@ -69,7 +79,7 @@ export default function InterviewPrep() {
               <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
               <option value="System Design">System Design</option>
               <option value="SQL & Databases">SQL & Databases</option>
-              <option value="__custom__">✏️ Custom Topic...</option>
+              <option value="__custom__">Custom Topic...</option>
             </select>
             {topic === '__custom__' && (
               <input
@@ -113,7 +123,7 @@ export default function InterviewPrep() {
               boxShadow: '0 8px 30px rgba(99,102,241,0.3)',
             }}
           >
-            <span className="text-xl">🎬</span>
+            <Play className="w-5 h-5 fill-current" />
             Start Mock Interview
           </button>
 
@@ -125,7 +135,7 @@ export default function InterviewPrep() {
         {/* Past Interviews */}
         <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
           <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-            <span>📋</span> Past Interviews
+            <ClipboardList className="w-5 h-5" /> Past Interviews
           </h2>
 
           {historyLoading ? (
@@ -134,7 +144,7 @@ export default function InterviewPrep() {
             </div>
           ) : history.length === 0 ? (
             <div className="glass rounded-2xl p-10 text-center">
-              <span className="text-4xl mb-3 block">🎤</span>
+              <Mic className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
               <p className="text-text-secondary text-sm">No interviews yet. Start your first one!</p>
             </div>
           ) : (
@@ -150,7 +160,7 @@ export default function InterviewPrep() {
                     <div className="flex items-center gap-4">
                       <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg"
                         style={{ background: d.bg, border: `1px solid ${d.border}` }}>
-                        {attempt.status === 'completed' ? '✅' : '⏳'}
+                        {attempt.status === 'completed' ? <CheckCircle2 className="w-5 h-5 text-success" /> : <Clock className="w-5 h-5 text-warning" />}
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-text-primary group-hover:text-accent-primary transition-colors">{attempt.topic}</p>

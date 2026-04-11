@@ -1,6 +1,5 @@
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import NotificationBell from './NotificationBell';
+import { LogOut } from 'lucide-react';
 
 export default function TopBar() {
   const { user, logout } = useAuth();
@@ -35,7 +34,7 @@ export default function TopBar() {
             className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 border border-red-500/10 hover:bg-red-500 hover:text-white transition-all cursor-pointer group"
             title="Sign Out"
           >
-            <span className="text-xl group-hover:scale-110 transition-transform">↩</span>
+            <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
           </button>
         </div>
       </div>

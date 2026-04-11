@@ -1,7 +1,13 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { startQuiz, answerQuiz } from '../services/api';
-import Navbar from '../components/Navbar';
+import { 
+  Brain, 
+  PartyPopper, 
+  ThumbsUp, 
+  Zap, 
+  CheckCircle2, 
+  XCircle, 
+  AlertTriangle 
+} from 'lucide-react';
 
 export default function Quiz() {
   const { topicId } = useParams();
@@ -70,9 +76,8 @@ export default function Quiz() {
   if (!quizStarted) {
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="max-w-2xl mx-auto px-6 py-20 text-center animate-fade-in">
-          <span className="text-6xl mb-6 block">🧠</span>
+          <Brain className="w-16 h-16 text-accent-primary mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-text-primary mb-3">Adaptive AI Quiz</h2>
           <p className="text-text-secondary mb-2 max-w-md mx-auto">
             This quiz adapts to your skill level in real-time. Answer correctly and the questions get harder. Miss one and they get easier.
@@ -81,7 +86,7 @@ export default function Quiz() {
 
           {error && (
             <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm animate-fade-in flex items-center justify-center gap-2">
-              <span>⚠️</span> {error}
+              <AlertTriangle className="w-4 h-4" /> {error}
             </div>
           )}
           <button
@@ -102,12 +107,12 @@ export default function Quiz() {
   }
 
   if (completed && finalResult) {
-    const emoji = finalResult.percentage >= 80 ? '🎉' : finalResult.percentage >= 50 ? '👍' : '💪';
+    const ResultIcon = finalResult.percentage >= 80 ? PartyPopper : finalResult.percentage >= 50 ? ThumbsUp : Zap;
+    const iconColor = finalResult.percentage >= 80 ? 'text-yellow-400' : finalResult.percentage >= 50 ? 'text-info' : 'text-accent-primary';
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="max-w-2xl mx-auto px-6 py-20 text-center animate-scale-in">
-          <span className="text-6xl mb-6 block">{emoji}</span>
+          <ResultIcon className={`w-16 h-16 ${iconColor} mx-auto mb-6`} fill="currentColor" />
           <h2 className="text-2xl font-bold text-text-primary mb-3">Quiz Complete!</h2>
           <div className="glass rounded-2xl p-8 mb-8 inline-block">
             <p className="text-5xl font-bold text-accent-primary mb-2">{finalResult.percentage}%</p>
@@ -128,7 +133,6 @@ export default function Quiz() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -174,8 +178,9 @@ export default function Quiz() {
         </div>
 
         {feedback && (
-          <div className={`p-4 rounded-xl mb-6 text-sm font-medium animate-fade-in ${feedback.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-danger/10 text-danger border border-danger/20'}`}>
-            {feedback.isCorrect ? '✅ Correct!' : `❌ Incorrect. The answer is: ${feedback.correctAnswer}`}
+          <div className={`p-4 rounded-xl mb-6 text-sm font-medium animate-fade-in flex items-center gap-3 ${feedback.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-danger/10 text-danger border border-danger/20'}`}>
+            {feedback.isCorrect ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+            {feedback.isCorrect ? 'Correct!' : `Incorrect. The answer is: ${feedback.correctAnswer}`}
           </div>
         )}
 
