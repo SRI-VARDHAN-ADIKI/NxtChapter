@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getCourses, getInterviewHistory } from '../services/api';
-import Navbar from '../components/Navbar';
 
 export default function InterviewPrep() {
   const navigate = useNavigate();
@@ -32,7 +31,6 @@ export default function InterviewPrep() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
       <main className="max-w-5xl mx-auto px-6 py-10">
         {/* Hero */}
         <div className="text-center mb-12 animate-fade-in">

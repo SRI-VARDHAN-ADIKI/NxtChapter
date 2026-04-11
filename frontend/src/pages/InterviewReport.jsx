@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getInterviewResult } from '../services/api';
-import Navbar from '../components/Navbar';
 
 function ScoreRing({ score, label, color, size = 80 }) {
   const radius = (size - 10) / 2;
@@ -56,7 +55,6 @@ export default function InterviewReport() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
       <main className="max-w-4xl mx-auto px-6 py-10">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">

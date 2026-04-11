@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { askDoubt, escalateDoubt, getStudentDoubts } from '../services/api';
-import Navbar from '../components/Navbar';
 
 export default function Doubts() {
   const [doubts, setDoubts] = useState([]);
@@ -43,7 +42,6 @@ export default function Doubts() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
 
       <main className="max-w-3xl mx-auto px-6 py-10">
         <div className="mb-8 animate-fade-in">

@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -15,6 +16,8 @@ export default function Navbar() {
   const studentLinks = [
     { to: '/dashboard', label: 'Dashboard' },
     { to: '/courses', label: 'My Courses' },
+    { to: '/skill-tree', label: '🧠 Skill Tree' },
+    { to: '/leaderboard', label: '🏆 Leaderboard' },
     { to: '/interview', label: '🎥 Interview' },
     { to: '/doubts', label: 'Doubts' },
   ];
@@ -22,6 +25,7 @@ export default function Navbar() {
   const adminLinks = [
     { to: '/admin', label: 'Dashboard' },
     { to: '/admin/courses', label: 'Courses' },
+    { to: '/admin/analytics', label: '📊 Analytics' },
     { to: '/admin/doubts', label: 'Doubts' },
   ];
 
@@ -51,16 +55,23 @@ export default function Navbar() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
+          <NotificationBell />
           {isAdmin && (
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-accent-primary/15 text-accent-primary border border-accent-primary/20">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-accent-primary/10 text-accent-primary border border-accent-primary/20 uppercase tracking-widest hidden md:block">
               Admin
             </span>
           )}
-          <span className="text-sm text-text-secondary hidden sm:block">{user?.name}</span>
-          <button onClick={handleLogout} className="text-sm text-text-muted hover:text-danger transition-colors cursor-pointer">
-            Sign Out
-          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold text-text-primary hidden md:block">{user?.name}</span>
+            <button 
+              onClick={handleLogout} 
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all cursor-pointer"
+              title="Sign Out"
+            >
+              <span className="text-lg">↩</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>

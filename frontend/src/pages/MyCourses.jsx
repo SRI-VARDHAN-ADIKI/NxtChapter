@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCourses } from '../services/api';
-import Navbar from '../components/Navbar';
 
 export default function MyCourses() {
   const [courses, setCourses] = useState([]);
@@ -16,7 +15,6 @@ export default function MyCourses() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
 
       <main className="max-w-7xl mx-auto px-6 py-10">
         <div className="mb-8 animate-fade-in">

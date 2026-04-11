@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getCourseById, getCourseProgress } from '../services/api';
-import Navbar from '../components/Navbar';
 
 export default function CourseDetail() {
   const { courseId } = useParams();
@@ -30,7 +29,6 @@ export default function CourseDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="flex justify-center py-20">
           <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
         </div>
@@ -41,7 +39,6 @@ export default function CourseDetail() {
   if (!course) {
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="max-w-7xl mx-auto px-6 py-20 text-center">
           <p className="text-text-secondary">Course not found.</p>
         </div>
@@ -51,7 +48,6 @@ export default function CourseDetail() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <Link to="/courses" className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 inline-block">

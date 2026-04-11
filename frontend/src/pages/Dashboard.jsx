@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getCourses } from '../services/api';
-import Navbar from '../components/Navbar';
+import { getCourses, getMyGamification } from '../services/api';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
+  const [gamification, setGamification] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCourses()
-      .then(({ data }) => setCourses(data))
-      .catch(() => {})
+    Promise.all([
+      getCourses(),
+      getMyGamification()
+    ]).then(([{ data: coursesData }, { data: gamificationData }]) => {
+      setCourses(coursesData);
+      setGamification(gamificationData);
+    }).catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -27,8 +31,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
-
       <main className="max-w-7xl mx-auto px-6 py-10">
         <div className="mb-10 animate-fade-in">
           <h2 className="text-2xl font-bold text-text-primary mb-1">Welcome back, {user?.name?.split(' ')[0]}</h2>
@@ -36,25 +38,44 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-          <div className="glass rounded-2xl p-6 animate-slide-up">
-            <span className="text-2xl mb-3 block">⚡</span>
-            <p className="text-sm text-text-secondary mb-1">Skill Rating</p>
-            <p className="text-3xl font-bold text-text-primary">{user?.skillRating || 1000}</p>
+          <div className="glass rounded-2xl p-6 animate-slide-up bg-accent-primary/5">
+            <div className="flex justify-between items-start mb-3">
+              <span className="text-2xl">⚡</span>
+              <div className="text-right">
+                <span className="text-[10px] uppercase font-bold text-accent-primary tracking-widest">Level</span>
+                <p className="text-xl font-black text-white">{gamification?.level || 1}</p>
+              </div>
+            </div>
+            <p className="text-sm text-text-secondary mb-1">Total XP</p>
+            <p className="text-3xl font-bold text-text-primary">{(gamification?.xp || 0).toLocaleString()}</p>
+            <div className="mt-4 w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+               <div 
+                 className="h-full bg-accent-primary transition-all duration-1000" 
+                 style={{ width: `${((gamification?.xp || 0) % 200) / 2}%` }} 
+               />
+            </div>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.05s' }}>
-            <span className="text-2xl mb-3 block">🏆</span>
-            <p className="text-sm text-text-secondary mb-1">Current Tier</p>
-            <p className={`text-3xl font-bold ${tier.color}`}>{tier.name}</p>
+            <span className="text-2xl mb-3 block">🔥</span>
+            <p className="text-sm text-text-secondary mb-1">Daily Streak</p>
+            <p className="text-3xl font-bold text-text-primary">{gamification?.streak || 0} Days</p>
+            <p className="text-[10px] text-text-muted mt-2 uppercase tracking-tight">Best: {gamification?.longestStreak || 0} days</p>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <span className="text-2xl mb-3 block">✅</span>
-            <p className="text-sm text-text-secondary mb-1">Problems Solved</p>
-            <p className="text-3xl font-bold text-text-primary">{user?.totalQuestionsAnswered || 0}</p>
+            <span className="text-2xl mb-3 block">🏅</span>
+            <p className="text-sm text-text-secondary mb-1">Badges Earned</p>
+            <p className="text-3xl font-bold text-text-primary">{gamification?.badges?.length || 0}</p>
+            <div className="flex gap-1 mt-2">
+              {gamification?.badges?.slice(0, 5).map(b => (
+                <span key={b.id} title={b.name} className="text-sm">{b.icon}</span>
+              ))}
+            </div>
           </div>
           <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.15s' }}>
-            <span className="text-2xl mb-3 block">📚</span>
-            <p className="text-sm text-text-secondary mb-1">Enrolled Courses</p>
-            <p className="text-3xl font-bold text-text-primary">{courses.length}</p>
+            <span className="text-2xl mb-3 block">📈</span>
+            <p className="text-sm text-text-secondary mb-1">Skill Rating</p>
+            <p className="text-3xl font-bold text-text-primary">{user?.skillRating || 1000}</p>
+            <p className={`text-[10px] mt-2 uppercase font-bold tracking-tight ${tier.color}`}>{tier.name}</p>
           </div>
         </div>
 

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getTopicById, updateProgress } from '../services/api';
-import Navbar from '../components/Navbar';
 import VoiceTutor from '../components/VoiceTutor';
+import DiscussionView from '../components/DiscussionView';
 
 export default function TopicView() {
   const { topicId } = useParams();
@@ -35,7 +35,6 @@ export default function TopicView() {
   if (loading) {
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="flex justify-center py-20">
           <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
         </div>
@@ -46,7 +45,6 @@ export default function TopicView() {
   if (!topic) {
     return (
       <div className="min-h-screen bg-bg-primary">
-        <Navbar />
         <div className="max-w-4xl mx-auto px-6 py-20 text-center">
           <p className="text-text-secondary">Topic not found.</p>
         </div>
@@ -56,7 +54,6 @@ export default function TopicView() {
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      <Navbar />
 
       <main className="max-w-5xl mx-auto px-6 py-10">
         <Link to={`/courses/${topic.courseId}`} className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 inline-block">
@@ -201,6 +198,8 @@ export default function TopicView() {
             </div>
           )}
         </div>
+
+        <DiscussionView topicId={topicId} courseId={topic.courseId} />
       </main>
 
       {/* AI Voice Tutor */}

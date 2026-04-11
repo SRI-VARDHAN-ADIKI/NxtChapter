@@ -1,6 +1,7 @@
 import { User } from '../models/User.js';
 import { Question } from '../models/Question.js';
 import { Submission } from '../models/Submission.js';
+import { updateGamification } from '../services/gamificationService.js';
 import { evaluateSubmissionCode } from '../services/aiAgentService.js';
 
 export const submitAnswer = async (req, res) => {
@@ -35,6 +36,9 @@ export const submitAnswer = async (req, res) => {
       }
     }
     await user.save();
+    
+    // Add gamification XP
+    await updateGamification(user._id, 100, req.app);
 
     question.timesAnswered += 1;
     question.successRate = ((question.successRate * (question.timesAnswered - 1)) + aiResult.overallScore) / question.timesAnswered;

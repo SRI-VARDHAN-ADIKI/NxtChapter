@@ -1,6 +1,7 @@
 import { QuizAttempt } from '../models/QuizAttempt.js';
 import { Topic } from '../models/Topic.js';
 import { StudentProgress } from '../models/StudentProgress.js';
+import { updateGamification } from '../services/gamificationService.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
@@ -142,6 +143,9 @@ export const answerQuestion = async (req, res) => {
         },
         { upsert: true }
       );
+
+      // Add gamification XP
+      await updateGamification(attempt.studentId, 50, req.app);
 
       return res.json({
         isCorrect,

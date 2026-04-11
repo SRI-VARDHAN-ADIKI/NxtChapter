@@ -51,4 +51,27 @@ export const answerInterview = (data) => api.post('/interview/answer', data);
 export const getInterviewHistory = () => api.get('/interview/history');
 export const getInterviewResult = (attemptId) => api.get(`/interview/result/${attemptId}`);
 
+// Gamification
+export const getLeaderboard = () => api.get('/gamification/leaderboard');
+export const getMyGamification = () => api.get('/gamification/me');
+export const recordActivity = (data) => api.post('/gamification/activity', data);
+
+// Analytics (Admin)
+export const getAdminAnalytics = () => api.get('/analytics');
+
+// Discussions
+export const getDiscussions = (topicId) => api.get(`/discussions/${topicId}`);
+export const createDiscussion = (data) => api.post('/discussions', data);
+export const addDiscussionReply = (id, data) => api.post(`/discussions/${id}/reply`, data);
+export const upvoteDiscussion = (id) => api.post(`/discussions/${id}/upvote`);
+export const upvoteReply = (id, replyId) => api.post(`/discussions/${id}/reply/${replyId}/upvote`);
+
+// Notifications
+export const getNotifications = () => api.get('/notifications');
+export const markNotificationRead = (id) => api.put(`/notifications/${id}/read`);
+export const markAllNotificationsRead = () => api.put('/notifications/read-all');
+
+// Skill Tree
+export const getSkillTree = () => api.get('/skilltree');
+
 export default api;
