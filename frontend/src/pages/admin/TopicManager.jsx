@@ -1,6 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { getCourseById, createTopic, updateTopic, deleteTopic, addCodingQuestion } from '../../services/api';
+import { 
+  ChevronLeft, 
+  Plus, 
+  FileEdit, 
+  CheckCircle2, 
+  Circle, 
+  Pencil, 
+  Trash2, 
+  Code2, 
+  Save, 
+  X 
+} from 'lucide-react';
 
 export default function TopicManager() {
   const { courseId } = useParams();
@@ -79,8 +89,8 @@ export default function TopicManager() {
     <div className="min-h-screen bg-bg-primary">
 
       <main className="max-w-4xl mx-auto px-6 py-10">
-        <Link to="/admin/courses" className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 inline-block">
-          ← Back to Courses
+        <Link to="/admin/courses" className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 flex items-center gap-1">
+          <ChevronLeft className="w-4 h-4" /> Back to Courses
         </Link>
 
         <div className="flex items-center justify-between mb-8 animate-fade-in">
@@ -90,9 +100,9 @@ export default function TopicManager() {
           </div>
           <button
             onClick={() => { resetTopicForm(); setShowTopicForm(true); }}
-            className="px-5 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer"
+            className="px-5 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer flex items-center gap-2"
           >
-            + Add Topic
+            <Plus className="w-4 h-4" /> Add Topic
           </button>
         </div>
 
@@ -148,10 +158,12 @@ export default function TopicManager() {
               />
             </div>
             <div className="flex gap-3">
-              <button type="submit" disabled={submitting} className="px-6 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl disabled:opacity-50 cursor-pointer">
+              <button type="submit" disabled={submitting} className="px-6 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl disabled:opacity-50 cursor-pointer flex items-center gap-2">
+                <Save className="w-4 h-4" />
                 {submitting ? 'Saving...' : editingTopicId ? 'Update Topic' : 'Add Topic'}
               </button>
-              <button type="button" onClick={resetTopicForm} className="px-6 py-2.5 bg-bg-tertiary text-text-secondary text-sm rounded-xl hover:bg-bg-elevated cursor-pointer">
+              <button type="button" onClick={resetTopicForm} className="px-6 py-2.5 bg-bg-tertiary text-text-secondary text-sm rounded-xl hover:bg-bg-elevated cursor-pointer flex items-center gap-2">
+                <X className="w-4 h-4" />
                 Cancel
               </button>
             </div>
@@ -160,7 +172,7 @@ export default function TopicManager() {
 
         {course?.topics?.length === 0 ? (
           <div className="glass rounded-2xl p-16 text-center">
-            <span className="text-5xl mb-4 block">📝</span>
+            <FileEdit className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
             <p className="text-text-secondary">No topics yet. Add your first topic above.</p>
           </div>
         ) : (
@@ -178,11 +190,11 @@ export default function TopicManager() {
                     <div>
                       <h4 className="font-medium text-text-primary">{topic.title}</h4>
                       <div className="flex gap-3 mt-1">
-                        <span className={`text-xs ${topic.videoUrl ? 'text-success' : 'text-text-muted'}`}>
-                          {topic.videoUrl ? '✓ Video' : '○ Video'}
+                        <span className={`text-xs flex items-center gap-1 ${topic.videoUrl ? 'text-success' : 'text-text-muted'}`}>
+                          {topic.videoUrl ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />} Video
                         </span>
-                        <span className={`text-xs ${topic.cheatsheet ? 'text-success' : 'text-text-muted'}`}>
-                          {topic.cheatsheet ? '✓ Cheatsheet' : '○ Cheatsheet'}
+                        <span className={`text-xs flex items-center gap-1 ${topic.cheatsheet ? 'text-success' : 'text-text-muted'}`}>
+                          {topic.cheatsheet ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />} Cheatsheet
                         </span>
                       </div>
                     </div>
@@ -190,15 +202,24 @@ export default function TopicManager() {
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => { setShowCodingForm(topic._id); setCodingForm({ title: '', description: '', topic: topic.title, difficultyRating: 1000 }); }}
-                      className="px-3 py-1.5 text-xs font-medium bg-success/10 text-success rounded-lg hover:bg-success/20 cursor-pointer"
+                      className="p-2 text-success hover:bg-success/10 rounded-lg transition-colors cursor-pointer"
+                      title="Add Coding Question"
                     >
-                      + Code Q
+                      <Plus className="w-4 h-4" />
                     </button>
-                    <button onClick={() => handleEditTopic(topic)} className="px-3 py-1.5 text-xs font-medium bg-bg-tertiary text-text-secondary rounded-lg hover:text-text-primary cursor-pointer">
-                      Edit
+                    <button 
+                      onClick={() => handleEditTopic(topic)} 
+                      className="p-2 text-text-secondary hover:bg-bg-tertiary rounded-lg hover:text-text-primary transition-colors cursor-pointer"
+                      title="Edit Topic"
+                    >
+                      <Pencil className="w-4 h-4" />
                     </button>
-                    <button onClick={() => handleDeleteTopic(topic._id)} className="px-3 py-1.5 text-xs font-medium bg-danger/10 text-danger rounded-lg hover:bg-danger/20 cursor-pointer">
-                      Delete
+                    <button 
+                      onClick={() => handleDeleteTopic(topic._id)} 
+                      className="p-2 text-danger hover:bg-danger/10 rounded-lg transition-colors cursor-pointer"
+                      title="Delete Topic"
+                    >
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -243,10 +264,12 @@ export default function TopicManager() {
                       </div>
                     </div>
                     <div className="flex gap-3 mt-4">
-                      <button type="submit" disabled={submitting} className="px-5 py-2 bg-accent-primary text-white text-sm rounded-xl disabled:opacity-50 cursor-pointer">
+                      <button type="submit" disabled={submitting} className="px-5 py-2 bg-success text-white text-sm rounded-xl disabled:opacity-50 cursor-pointer flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
                         {submitting ? 'Adding...' : 'Add Question'}
                       </button>
-                      <button type="button" onClick={() => setShowCodingForm(null)} className="px-5 py-2 bg-bg-tertiary text-text-secondary text-sm rounded-xl cursor-pointer">
+                      <button type="button" onClick={() => setShowCodingForm(null)} className="px-5 py-2 bg-bg-tertiary text-text-secondary text-sm rounded-xl cursor-pointer flex items-center gap-2">
+                        <X className="w-4 h-4" />
                         Cancel
                       </button>
                     </div>

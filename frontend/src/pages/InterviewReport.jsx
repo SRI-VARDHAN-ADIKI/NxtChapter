@@ -1,6 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getInterviewResult } from '../services/api';
+import { 
+  BarChart3, 
+  Lightbulb, 
+  ArrowLeft, 
+  RefreshCw,
+  ChevronRight,
+  Award
+} from 'lucide-react';
 
 function ScoreRing({ score, label, color, size = 80 }) {
   const radius = (size - 10) / 2;
@@ -58,9 +64,11 @@ export default function InterviewReport() {
       <main className="max-w-4xl mx-auto px-6 py-10">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
-          <span className="text-5xl mb-4 block">📊</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent-primary/10 border border-accent-primary/20 mb-4">
+            <BarChart3 className="w-8 h-8 text-accent-primary" />
+          </div>
           <h1 className="text-2xl font-bold text-text-primary mb-2">Interview Report</h1>
-          <p className="text-text-secondary">{attempt.topic} • {attempt.difficulty} • {new Date(attempt.createdAt).toLocaleDateString()}</p>
+          <p className="text-text-secondary">{attempt.topic} | {attempt.difficulty} | {new Date(attempt.createdAt).toLocaleDateString()}</p>
         </div>
 
         {/* Score Overview */}
@@ -136,10 +144,11 @@ export default function InterviewReport() {
                 </div>
               </div>
 
-              {q.aiFeedback && (
-                <p className="text-xs text-text-secondary leading-relaxed" style={{ borderLeft: '2px solid rgba(99,102,241,0.3)', paddingLeft: '12px' }}>
-                  💡 {q.aiFeedback}
-                </p>
+               {q.aiFeedback && (
+                <div className="text-xs text-text-secondary leading-relaxed flex items-start gap-2" style={{ borderLeft: '2px solid rgba(99,102,241,0.3)', paddingLeft: '12px' }}>
+                  <Lightbulb className="w-3.5 h-3.5 text-warning mt-0.5 shrink-0" />
+                  <p>{q.aiFeedback}</p>
+                </div>
               )}
             </div>
           ))}
@@ -147,11 +156,11 @@ export default function InterviewReport() {
 
         {/* Actions */}
         <div className="flex items-center justify-center gap-4">
-          <button onClick={() => navigate('/interview')} className="px-8 py-3 rounded-xl font-semibold cursor-pointer transition-all text-text-primary" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-            ← Back to Prep
+          <button onClick={() => navigate('/interview')} className="px-8 py-3 rounded-xl font-semibold cursor-pointer transition-all text-text-primary flex items-center gap-2" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <ArrowLeft className="w-4 h-4" /> Back to Prep
           </button>
-          <button onClick={() => navigate('/interview/session', { state: { topic: attempt.topic, difficulty: attempt.difficulty } })} className="px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
-            🔄 Try Again
+          <button onClick={() => navigate('/interview/session', { state: { topic: attempt.topic, difficulty: attempt.difficulty } })} className="px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
+            <RefreshCw className="w-4 h-4" /> Try Again
           </button>
         </div>
       </main>

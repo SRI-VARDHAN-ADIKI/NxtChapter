@@ -98,7 +98,7 @@ export default function AdminDashboard() {
                       <div key={doubt._id} className="p-3 bg-bg-primary/50 rounded-xl">
                         <p className="text-sm text-text-primary truncate">{doubt.question}</p>
                         <p className="text-xs text-text-muted mt-1">
-                          by {doubt.studentId?.name || 'Student'} •{' '}
+                          by {doubt.studentId?.name || 'Student'} |{' '}
                           <span className={doubt.status === 'escalated' ? 'text-warning' : 'text-success'}>
                             {doubt.status === 'escalated' ? 'Pending' : 'Resolved'}
                           </span>

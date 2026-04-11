@@ -1,5 +1,12 @@
-import { useState, useEffect } from 'react';
 import { getDiscussions, createDiscussion, addDiscussionReply, upvoteDiscussion, upvoteReply } from '../services/api';
+import { 
+  MessageSquare, 
+  ThumbsUp, 
+  Plus, 
+  Send, 
+  Pin,
+  X 
+} from 'lucide-react';
 
 export default function DiscussionView({ topicId, courseId }) {
   const [discussions, setDiscussions] = useState([]);
@@ -84,8 +91,9 @@ export default function DiscussionView({ topicId, courseId }) {
         </div>
         <button 
           onClick={() => setIsFormOpen(!isFormOpen)}
-          className="px-5 py-2.5 bg-accent-primary text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-accent-primary/20 transition-all cursor-pointer"
+          className="px-5 py-2.5 bg-accent-primary text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-accent-primary/20 transition-all cursor-pointer flex items-center gap-2"
         >
+          {isFormOpen ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
           {isFormOpen ? 'Cancel' : 'New Discussion'}
         </button>
       </div>
@@ -120,7 +128,7 @@ export default function DiscussionView({ topicId, courseId }) {
       <div className="space-y-6">
         {discussions.length === 0 ? (
           <div className="text-center py-10 glass rounded-2xl">
-            <span className="text-4xl mb-4 block">💬</span>
+            <MessageSquare className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
             <p className="text-text-secondary">No discussions yet. Be the first to start one!</p>
           </div>
         ) : (
@@ -137,7 +145,11 @@ export default function DiscussionView({ topicId, courseId }) {
                       <p className="text-[10px] text-text-muted">{new Date(d.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  {d.isPinned && <span className="text-xs px-2 py-0.5 bg-accent-primary/20 text-accent-primary rounded-full border border-accent-primary/20">Pinned</span>}
+                  {d.isPinned && (
+                    <span className="text-xs px-2 py-0.5 bg-accent-primary/20 text-accent-primary rounded-full border border-accent-primary/20 flex items-center gap-1">
+                      <Pin className="w-3 h-3" /> Pinned
+                    </span>
+                  )}
                 </div>
                 
                 <h3 className="text-lg font-bold text-white mb-2">{d.title}</h3>
@@ -152,7 +164,8 @@ export default function DiscussionView({ topicId, courseId }) {
                       : 'bg-white/5 border-white/5 text-text-muted hover:text-white hover:border-white/10'
                     }`}
                   >
-                    👍 {d.upvotes?.length || 0}
+                    <ThumbsUp className={`w-3.5 h-3.5 ${d.upvotes?.includes(window.localStorage.getItem('nxtchapter_user_id')) ? 'fill-current' : ''}`} />
+                    {d.upvotes?.length || 0}
                   </button>
                   <span className="text-xs text-text-muted">{d.replies?.length || 0} replies</span>
                 </div>
@@ -174,9 +187,10 @@ export default function DiscussionView({ topicId, courseId }) {
                         <p className="text-sm text-text-secondary">{r.content}</p>
                         <button 
                           onClick={() => handleUpvote(d._id, true, r._id)}
-                          className="text-[10px] text-text-muted mt-2 hover:text-accent-primary transition-colors cursor-pointer"
+                          className="text-[10px] text-text-muted mt-2 hover:text-accent-primary transition-colors cursor-pointer flex items-center gap-1"
                         >
-                          👍 {r.upvotes?.length || 0} Upvote
+                          <ThumbsUp className="w-2.5 h-2.5" />
+                          {r.upvotes?.length || 0} Upvote
                         </button>
                       </div>
                     </div>
@@ -194,9 +208,9 @@ export default function DiscussionView({ topicId, courseId }) {
                   />
                   <button 
                     onClick={() => handleReply(d._id)}
-                    className="p-2.5 bg-accent-primary text-white rounded-xl hover:shadow-lg transition-all cursor-pointer"
+                    className="p-3 bg-accent-primary text-white rounded-xl hover:shadow-lg transition-all cursor-pointer"
                   >
-                    <span className="text-xs">Send</span>
+                    <Send className="w-4 h-4" />
                   </button>
                 </div>
               </div>

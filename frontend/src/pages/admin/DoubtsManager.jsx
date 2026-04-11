@@ -1,5 +1,13 @@
-import { useState, useEffect } from 'react';
 import { getEscalatedDoubts, resolveDoubt } from '../../services/api';
+import { 
+  CheckCircle2, 
+  Bot, 
+  UserCog, 
+  MessageSquare, 
+  Send, 
+  X, 
+  Search 
+} from 'lucide-react';
 
 export default function DoubtsManager() {
   const [doubts, setDoubts] = useState([]);
@@ -64,7 +72,7 @@ export default function DoubtsManager() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="glass rounded-2xl p-16 text-center">
-            <span className="text-5xl mb-4 block">✅</span>
+            <CheckCircle2 className="w-12 h-12 text-success mx-auto mb-4 opacity-50" />
             <p className="text-text-secondary">
               {filter === 'escalated' ? 'No pending doubts!' : 'No doubts found.'}
             </p>
@@ -92,14 +100,14 @@ export default function DoubtsManager() {
 
                 {doubt.aiResponse && (
                   <div className="bg-info/5 border border-info/10 rounded-xl p-4 mb-4">
-                    <p className="text-xs text-info font-medium mb-2">🤖 AI Response:</p>
+                    <p className="text-xs text-info font-medium mb-2 flex items-center gap-1.5"><Bot className="w-4 h-4" /> AI Response:</p>
                     <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{doubt.aiResponse}</p>
                   </div>
                 )}
 
                 {doubt.mentorResponse && (
                   <div className="bg-success/5 border border-success/10 rounded-xl p-4 mb-4">
-                    <p className="text-xs text-success font-medium mb-2">👨‍🏫 Your Response:</p>
+                    <p className="text-xs text-success font-medium mb-2 flex items-center gap-1.5"><UserCog className="w-4 h-4" /> Your Response:</p>
                     <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{doubt.mentorResponse}</p>
                   </div>
                 )}
@@ -107,9 +115,9 @@ export default function DoubtsManager() {
                 {doubt.status === 'escalated' && respondingTo !== doubt._id && (
                   <button
                     onClick={() => setRespondingTo(doubt._id)}
-                    className="px-5 py-2 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-medium rounded-xl transition-all cursor-pointer"
+                    className="px-5 py-2 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-medium rounded-xl transition-all cursor-pointer flex items-center gap-2"
                   >
-                    Write Response
+                    <MessageSquare className="w-4 h-4" /> Write Response
                   </button>
                 )}
 
@@ -126,14 +134,16 @@ export default function DoubtsManager() {
                       <button
                         onClick={() => handleResolve(doubt._id)}
                         disabled={submitting || !response.trim()}
-                        className="px-5 py-2 bg-success hover:bg-success/80 text-white text-sm font-medium rounded-xl disabled:opacity-50 cursor-pointer"
+                        className="px-5 py-2 bg-success hover:bg-success/80 text-white text-sm font-medium rounded-xl disabled:opacity-50 cursor-pointer flex items-center gap-2"
                       >
+                        <Send className="w-4 h-4" />
                         {submitting ? 'Sending...' : 'Send & Resolve'}
                       </button>
                       <button
                         onClick={() => { setRespondingTo(null); setResponse(''); }}
-                        className="px-5 py-2 bg-bg-tertiary text-text-secondary text-sm rounded-xl cursor-pointer"
+                        className="px-5 py-2 bg-bg-tertiary text-text-secondary text-sm rounded-xl cursor-pointer flex items-center gap-2"
                       >
+                        <X className="w-4 h-4" />
                         Cancel
                       </button>
                     </div>
@@ -142,7 +152,7 @@ export default function DoubtsManager() {
 
                 <p className="text-xs text-text-muted mt-3">
                   {new Date(doubt.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  {doubt.topicId?.title && ` • ${doubt.topicId.title}`}
+                  {doubt.topicId?.title && ` | ${doubt.topicId.title}`}
                 </p>
               </div>
             ))}

@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { getCourseById, getCourseProgress } from '../services/api';
+import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 export default function CourseDetail() {
   const { courseId } = useParams();
@@ -50,8 +49,8 @@ export default function CourseDetail() {
     <div className="min-h-screen bg-bg-primary">
 
       <main className="max-w-4xl mx-auto px-6 py-10">
-        <Link to="/courses" className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 inline-block">
-          ← Back to Courses
+        <Link to="/courses" className="text-sm text-text-secondary hover:text-text-primary transition-colors mb-6 flex items-center gap-1">
+          <ChevronLeft className="w-4 h-4" /> Back to Courses
         </Link>
 
         <div className="glass rounded-2xl p-8 mb-8 animate-fade-in">
@@ -96,7 +95,7 @@ export default function CourseDetail() {
                         ? 'bg-success/15 text-success'
                         : 'bg-bg-tertiary text-text-secondary'
                     }`}>
-                      {completion.done === 4 ? '✓' : i + 1}
+                      {completion.done === 4 ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
                     </span>
                     <div>
                       <h4 className="font-medium text-text-primary group-hover:text-accent-primary transition-colors">
@@ -118,8 +117,8 @@ export default function CourseDetail() {
                         />
                       ))}
                     </div>
-                    <span className="text-text-muted text-sm">→</span>
-                  </div>
+                      <ChevronRight className="w-4 h-4 text-text-muted transition-transform group-hover:translate-x-1" />
+                    </div>
                 </Link>
               );
             })}

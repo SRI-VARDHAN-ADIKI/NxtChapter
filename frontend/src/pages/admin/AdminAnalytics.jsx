@@ -4,6 +4,14 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area 
 } from 'recharts';
+import { 
+  Users, 
+  BookOpen, 
+  Code2, 
+  MessageSquareQuestion, 
+  Flame, 
+  RefreshCcw 
+} from 'lucide-react';
 
 export default function AdminAnalytics() {
   const [data, setData] = useState(null);
@@ -25,10 +33,10 @@ export default function AdminAnalytics() {
   const COLORS = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#a78bfa'];
 
   const stats = [
-    { label: 'Total Students', value: data.overview.totalStudents, icon: '👥' },
-    { label: 'Active Courses', value: data.overview.totalCourses, icon: '📚' },
-    { label: 'Questions Solved', value: data.overview.totalSubmissions, icon: '💻' },
-    { label: 'Open Doubts', value: data.overview.totalDoubts, icon: '❓' },
+    { label: 'Total Students', value: data.overview.totalStudents, icon: Users },
+    { label: 'Active Courses', value: data.overview.totalCourses, icon: BookOpen },
+    { label: 'Questions Solved', value: data.overview.totalSubmissions, icon: Code2 },
+    { label: 'Open Doubts', value: data.overview.totalDoubts, icon: MessageSquareQuestion },
   ];
 
   return (
@@ -39,8 +47,8 @@ export default function AdminAnalytics() {
             <h1 className="text-2xl font-bold text-text-primary">Platform Analytics</h1>
             <p className="text-text-secondary text-sm">Real-time performance and engagement metrics</p>
           </div>
-          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm hover:bg-white/10 transition-all cursor-pointer">
-            Refresh Data
+          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm hover:bg-white/10 transition-all cursor-pointer flex items-center gap-2">
+            <RefreshCcw className="w-4 h-4" /> Refresh Data
           </button>
         </div>
 
@@ -49,8 +57,8 @@ export default function AdminAnalytics() {
           {stats.map((s, i) => (
             <div key={i} className="glass p-6 rounded-2xl animate-scale-in" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}>
-                  {s.icon}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}>
+                  <s.icon className="w-6 h-6 text-accent-primary" />
                 </div>
                 <div>
                   <p className="text-text-muted text-xs font-medium uppercase tracking-wider">{s.label}</p>
@@ -160,7 +168,12 @@ export default function AdminAnalytics() {
                     <tr key={i} className="hover:bg-white/[0.02]">
                       <td className="py-4 text-white font-medium">{s.name}</td>
                       <td className="py-4 text-center">{s.level}</td>
-                      <td className="py-4 text-center">🔥 {s.streak}</td>
+                       <td className="py-4 text-center">
+                        <div className="flex items-center justify-center gap-1.5 text-orange-400">
+                          <Flame className="w-3.5 h-3.5" fill="currentColor" />
+                          {s.streak}
+                        </div>
+                      </td>
                       <td className="py-4 text-right text-accent-primary font-bold">{s.xp.toLocaleString()}</td>
                     </tr>
                   ))}

@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { getCourses, createCourse, updateCourse, deleteCourse } from '../../services/api';
+import { Plus, BookOpen, Layers, Pencil, Trash2, X, Save } from 'lucide-react';
 
 export default function CourseManager() {
   const [courses, setCourses] = useState([]);
@@ -64,9 +63,9 @@ export default function CourseManager() {
           </div>
           <button
             onClick={() => { resetForm(); setShowForm(true); }}
-            className="px-5 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer"
+            className="px-5 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer flex items-center gap-2"
           >
-            + New Course
+            <Plus className="w-4 h-4" /> New Course
           </button>
         </div>
 
@@ -116,15 +115,17 @@ export default function CourseManager() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                className="px-6 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
+                <Save className="w-4 h-4" />
                 {submitting ? 'Saving...' : editingId ? 'Update Course' : 'Create Course'}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-6 py-2.5 bg-bg-tertiary text-text-secondary text-sm rounded-xl hover:bg-bg-elevated transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-bg-tertiary text-text-secondary text-sm rounded-xl hover:bg-bg-elevated transition-colors cursor-pointer flex items-center gap-2"
               >
+                <X className="w-4 h-4" />
                 Cancel
               </button>
             </div>
@@ -137,7 +138,7 @@ export default function CourseManager() {
           </div>
         ) : courses.length === 0 ? (
           <div className="glass rounded-2xl p-16 text-center">
-            <span className="text-5xl mb-4 block">📚</span>
+            <BookOpen className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
             <h3 className="text-xl font-semibold text-text-primary mb-2">No courses yet</h3>
             <p className="text-text-secondary">Create your first course to get started.</p>
           </div>
@@ -156,21 +157,24 @@ export default function CourseManager() {
                 <div className="flex items-center gap-2 ml-4 shrink-0">
                   <Link
                     to={`/admin/courses/${course._id}/topics`}
-                    className="px-3 py-1.5 text-xs font-medium bg-accent-primary/10 text-accent-primary rounded-lg hover:bg-accent-primary/20 transition-colors"
+                    className="p-2 text-accent-primary hover:bg-accent-primary/10 rounded-lg transition-colors"
+                    title="Manage Topics"
                   >
-                    Topics
+                    <Layers className="w-4 h-4" />
                   </Link>
                   <button
                     onClick={() => handleEdit(course)}
-                    className="px-3 py-1.5 text-xs font-medium bg-bg-tertiary text-text-secondary rounded-lg hover:text-text-primary transition-colors cursor-pointer"
+                    className="p-2 text-text-secondary hover:bg-bg-tertiary rounded-lg hover:text-text-primary transition-colors cursor-pointer"
+                    title="Edit Course"
                   >
-                    Edit
+                    <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(course._id)}
-                    className="px-3 py-1.5 text-xs font-medium bg-danger/10 text-danger rounded-lg hover:bg-danger/20 transition-colors cursor-pointer"
+                    className="p-2 text-danger hover:bg-danger/10 rounded-lg transition-colors cursor-pointer"
+                    title="Delete Course"
                   >
-                    Delete
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>

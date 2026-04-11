@@ -82,7 +82,7 @@ export default function Quiz() {
           <p className="text-text-secondary mb-2 max-w-md mx-auto">
             This quiz adapts to your skill level in real-time. Answer correctly and the questions get harder. Miss one and they get easier.
           </p>
-          <p className="text-text-muted text-sm mb-8">{maxQuestions} questions • AI-powered</p>
+          <p className="text-text-muted text-sm mb-8">{maxQuestions} questions | AI-powered</p>
 
           {error && (
             <div className="mb-6 p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm animate-fade-in flex items-center justify-center gap-2">

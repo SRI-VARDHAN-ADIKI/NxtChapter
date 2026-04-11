@@ -3,6 +3,17 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { useAuth } from '../context/AuthContext';
 import { getCodingQuestions, evaluateCode } from '../services/api';
+import { 
+  ChevronLeft, 
+  ChevronUp, 
+  ChevronDown, 
+  X, 
+  Code2, 
+  Terminal,
+  Play,
+  CheckCircle2,
+  AlertTriangle
+} from 'lucide-react';
 
 const LANGUAGES = [
   { label: 'JavaScript', value: 'javascript' },
@@ -43,8 +54,8 @@ function EloAnimation({ oldElo, newElo }) {
     <div className="text-center">
       <p className="text-sm text-text-secondary mb-2">Skill Rating</p>
       <p className="text-5xl font-bold text-text-primary mb-2 font-mono">{displayed}</p>
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${isPositive ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'}`}>
-        {isPositive ? '▲' : '▼'} {Math.abs(diff)} ELO
+      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold gap-1 ${isPositive ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger'}`}>
+        {isPositive ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />} {Math.abs(diff)} ELO
       </span>
     </div>
   );
@@ -74,7 +85,9 @@ function ResultModal({ result, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="relative glass-elevated rounded-2xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in">
-        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-bg-primary/50 text-text-secondary hover:text-text-primary transition-colors cursor-pointer">✕</button>
+        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-bg-primary/50 text-text-secondary hover:text-text-primary transition-colors cursor-pointer">
+          <X className="w-4 h-4" />
+        </button>
         <h3 className="text-xl font-bold text-text-primary mb-8 text-center">Evaluation Results</h3>
         <div className="mb-8"><EloAnimation oldElo={result.oldElo} newElo={result.newElo} /></div>
         <div className="flex justify-center gap-8 mb-8">
@@ -158,7 +171,9 @@ export default function CodingArena() {
     <div className="h-screen flex flex-col bg-bg-primary">
       <nav className="h-14 border-b border-border-default bg-bg-secondary/80 backdrop-blur-xl flex items-center justify-between px-5 shrink-0">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(`/topic/${topicId}`)} className="text-text-secondary hover:text-text-primary transition-colors text-sm cursor-pointer">← Topic</button>
+          <button onClick={() => navigate(`/topic/${topicId}`)} className="text-text-secondary hover:text-text-primary transition-colors text-sm cursor-pointer flex items-center gap-1">
+            <ChevronLeft className="w-4 h-4" /> Topic
+          </button>
           <span className="w-px h-5 bg-border-default" />
           <h1 className="text-sm font-semibold text-text-primary truncate max-w-xs">{selectedQuestion?.title}</h1>
         </div>
@@ -216,7 +231,7 @@ export default function CodingArena() {
       </div>
 
       <div className="h-16 border-t border-border-default bg-bg-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 shrink-0">
-        <p className="text-xs text-text-muted">{language.charAt(0).toUpperCase() + language.slice(1)} • {code.split('\n').length} lines</p>
+        <p className="text-xs text-text-muted">{language.charAt(0).toUpperCase() + language.slice(1)} | {code.split('\n').length} lines</p>
         <button onClick={handleSubmit} disabled={submitting || !code.trim()} className="px-8 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-accent-primary/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
           {submitting ? (
             <span className="flex items-center gap-2">

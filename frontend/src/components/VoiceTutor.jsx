@@ -1,5 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
 import { askVoiceTutor } from '../services/api';
+import { 
+  Mic, 
+  MicOff, 
+  X, 
+  Square, 
+  Circle, 
+  Brain, 
+  Volume2, 
+  Trash2,
+  Sparkles
+} from 'lucide-react';
 
 const STATES = {
   IDLE: 'idle',
@@ -157,7 +167,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         }}
         title="AI Voice Tutor"
       >
-        <span className="text-2xl">🎙️</span>
+        <Mic className="w-6 h-6 text-white" />
         {/* Pulse ring */}
         <span className="absolute inset-0 rounded-full animate-ping opacity-20"
           style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }} />
@@ -180,20 +190,22 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center"
             style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))', border: '1px solid rgba(99,102,241,0.3)' }}>
-            <span className="text-lg">🎙️</span>
+            <Mic className="w-5 h-5 text-accent-primary" />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-white">Voice Tutor</h3>
             <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              {topicTitle || 'General'} • AI-Powered
+              {topicTitle || 'General'} | AI-Powered
             </p>
           </div>
         </div>
         <button
           onClick={() => { stopSpeaking(); setIsOpen(false); }}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-xs"
+          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-xs hover:bg-white/10"
           style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}
-        >✕</button>
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
       </div>
 
       {/* Chat History */}
@@ -201,7 +213,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         style={{ scrollbarWidth: 'thin' }}>
         {history.length === 0 && !transcript && (
           <div className="text-center py-8">
-            <span className="text-4xl mb-3 block">🎤</span>
+            <Mic className="w-10 h-10 text-text-muted mx-auto mb-3 opacity-30" />
             <p className="text-sm font-medium text-white mb-1">Ask me anything</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
               Tap the mic and speak your question
@@ -271,16 +283,16 @@ export default function VoiceTutor({ topicId, topicTitle }) {
       <div className="px-5 py-4 flex items-center justify-center gap-4"
         style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         {/* Status text */}
-        <p className="text-xs flex-1 text-center" style={{
+        <p className="text-[11px] flex-1 text-center font-medium" style={{
           color: state === STATES.LISTENING ? '#6366f1' :
                  state === STATES.SPEAKING ? '#22c55e' :
                  state === STATES.THINKING ? '#f59e0b' :
                  'rgba(255,255,255,0.3)'
         }}>
-          {state === STATES.LISTENING && '🔴 Listening...'}
-          {state === STATES.THINKING && '🧠 Generating response...'}
-          {state === STATES.SPEAKING && '🔊 Speaking...'}
-          {state === STATES.IDLE && 'Tap mic to speak'}
+          {state === STATES.LISTENING && <span className="flex items-center justify-center gap-1.5"><Circle className="w-2.5 h-2.5 fill-current animate-pulse" /> Listening...</span>}
+          {state === STATES.THINKING && <span className="flex items-center justify-center gap-1.5"><Brain className="w-3.5 h-3.5" /> Thinking...</span>}
+          {state === STATES.SPEAKING && <span className="flex items-center justify-center gap-1.5"><Volume2 className="w-3.5 h-3.5" /> Speaking...</span>}
+          {state === STATES.IDLE && 'Ready to assist'}
         </p>
 
         {/* Mic Button */}
@@ -304,19 +316,21 @@ export default function VoiceTutor({ topicId, topicTitle }) {
           {state === STATES.LISTENING && (
             <span className="absolute inset-0 rounded-full animate-ping opacity-30" style={{ background: '#ef4444' }} />
           )}
-          <span className="text-xl relative z-10">
-            {state === STATES.LISTENING ? '⏹️' :
-             state === STATES.SPEAKING ? '⏹️' :
-             '🎤'}
+          <span className="text-xl relative z-10 text-white">
+            {state === STATES.LISTENING ? <Square className="w-6 h-6 fill-current" /> :
+             state === STATES.SPEAKING ? <Square className="w-6 h-6 fill-current" /> :
+             <Mic className="w-6 h-6" />}
           </span>
         </button>
 
         {/* Clear button */}
         <button
           onClick={() => { setHistory([]); setTranscript(''); setAnswer(''); setError(''); }}
-          className="text-xs px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-          style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.3)' }}
-        >Clear</button>
+          className="p-2.5 rounded-xl transition-all cursor-pointer hover:bg-danger/10 text-white/30 hover:text-danger"
+          title="Clear History"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { startInterview, answerInterview } from '../services/api';
+import { 
+  AlertTriangle, 
+  ArrowLeft, 
+  ChevronRight, 
+  Timer, 
+  Mic, 
+  FileText, 
+  Lightbulb, 
+  BarChart3, 
+  PartyPopper,
+  Trophy
+} from 'lucide-react';
 
 const PHASES = { LOADING: 'loading', PREP: 'prep', ANSWERING: 'answering', EVALUATING: 'evaluating', FEEDBACK: 'feedback', COMPLETE: 'complete' };
 const PREP_TIME = 30;
@@ -193,7 +203,7 @@ export default function InterviewSession() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#0a0a1a' }}>
         <div className="text-center max-w-md">
-          <span className="text-5xl mb-4 block">⚠️</span>
+          <AlertTriangle className="w-16 h-16 text-warning mx-auto mb-4" />
           <p className="text-white mb-4">{error}</p>
           <button onClick={() => navigate('/interview')} className="px-6 py-3 rounded-xl text-white font-semibold cursor-pointer" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>Back to Interview Prep</button>
         </div>
@@ -206,7 +216,9 @@ export default function InterviewSession() {
       {/* Top Bar */}
       <div className="h-14 flex items-center justify-between px-6 shrink-0" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/interview')} className="text-sm cursor-pointer" style={{ color: 'rgba(255,255,255,0.4)' }}>← Exit</button>
+          <button onClick={() => navigate('/interview')} className="text-sm cursor-pointer flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <ArrowLeft className="w-4 h-4" /> Exit
+          </button>
           <span style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
           <span className="text-sm font-medium text-white">{topic}</span>
           <span className="text-xs px-2 py-0.5 rounded-full" style={{
@@ -249,7 +261,9 @@ export default function InterviewSession() {
                 <div className="text-center">
                   <p className="text-sm font-medium" style={{ color: '#f59e0b' }}>PREPARE YOUR ANSWER</p>
                   <p className="text-6xl font-bold text-white mt-2 font-mono">{timer}</p>
-                  <button onClick={skipPrep} className="mt-4 text-xs px-4 py-2 rounded-lg cursor-pointer" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>Skip Prep →</button>
+                  <button onClick={skipPrep} className="mt-4 text-[10px] px-4 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 mx-auto" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
+                    Skip Prep <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             )}
@@ -277,7 +291,10 @@ export default function InterviewSession() {
           {(phase === PHASES.PREP || phase === PHASES.ANSWERING) && (
             <div className="w-full max-w-lg mt-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-medium" style={{ color: timerColor }}>{phase === PHASES.PREP ? '⏳ Prep Time' : '🎤 Answer Time'}</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider flex items-center gap-1.5" style={{ color: timerColor }}>
+                  {phase === PHASES.PREP ? <Timer className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                  {phase === PHASES.PREP ? 'Prep Time' : 'Answer Time'}
+                </span>
                 <span className="text-sm font-mono font-bold" style={{ color: timerColor }}>{formatTime(timer)}</span>
               </div>
               <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
@@ -288,8 +305,8 @@ export default function InterviewSession() {
 
           {/* Submit button */}
           {phase === PHASES.ANSWERING && (
-            <button onClick={submitAnswer} className="mt-6 px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all hover:scale-105" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
-              Submit Answer →
+            <button onClick={submitAnswer} className="mt-6 px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all hover:scale-105 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
+              Submit Answer <ChevronRight className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -308,8 +325,8 @@ export default function InterviewSession() {
           <div className="flex-1 overflow-y-auto p-6">
             {phase === PHASES.ANSWERING && (
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  📝 Live Transcript
+                <p className="text-[11px] font-medium uppercase tracking-wider mb-3 flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <FileText className="w-3 h-3" /> Live Transcript
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
                   {transcript || <span style={{ color: 'rgba(255,255,255,0.3)' }}>Start speaking... your answer will appear here</span>}
@@ -319,7 +336,7 @@ export default function InterviewSession() {
 
             {phase === PHASES.PREP && (
               <div className="text-center py-8">
-                <span className="text-3xl mb-3 block">💡</span>
+                <Lightbulb className="w-8 h-8 text-warning mx-auto mb-3 opacity-50" />
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
                   Take a moment to organize your thoughts. Think of key points and examples.
                 </p>
@@ -328,8 +345,8 @@ export default function InterviewSession() {
 
             {(phase === PHASES.FEEDBACK && evaluation) && (
               <div className="space-y-4 animate-fade-in">
-                <p className="text-[11px] font-medium uppercase tracking-wider mb-3" style={{ color: 'rgba(99,102,241,0.8)' }}>
-                  📊 Feedback
+                <p className="text-[11px] font-medium uppercase tracking-wider mb-3 flex items-center gap-1.5" style={{ color: 'rgba(99,102,241,0.8)' }}>
+                  <BarChart3 className="w-3.5 h-3.5" /> Feedback
                 </p>
                 <div className="grid grid-cols-3 gap-3">
                   {[
@@ -354,14 +371,14 @@ export default function InterviewSession() {
 
             {phase === PHASES.COMPLETE && overallResult && (
               <div className="text-center py-6 animate-fade-in">
-                <span className="text-5xl mb-4 block">🎉</span>
+                <PartyPopper className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
                 <p className="text-lg font-bold text-white mb-2">Interview Complete!</p>
                 <p className="text-4xl font-bold mb-4" style={{
                   color: overallResult.overallScore >= 70 ? '#22c55e' : overallResult.overallScore >= 40 ? '#f59e0b' : '#ef4444'
                 }}>{overallResult.overallScore}%</p>
                 <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>{overallResult.overallFeedback}</p>
-                <button onClick={() => navigate(`/interview/report/${attemptId}`)} className="px-6 py-3 rounded-xl text-white font-semibold cursor-pointer" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
-                  View Full Report →
+                <button onClick={() => navigate(`/interview/report/${attemptId}`)} className="px-6 py-3 rounded-xl text-white font-semibold cursor-pointer flex items-center gap-2 mx-auto" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+                  View Full Report <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             )}

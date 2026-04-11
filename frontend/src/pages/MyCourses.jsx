@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCourses } from '../services/api';
+import { BookOpen, Book, ChevronRight } from 'lucide-react';
 
 export default function MyCourses() {
   const [courses, setCourses] = useState([]);
@@ -28,7 +29,7 @@ export default function MyCourses() {
           </div>
         ) : courses.length === 0 ? (
           <div className="glass rounded-2xl p-16 text-center animate-fade-in">
-            <span className="text-5xl mb-4 block">📚</span>
+            <BookOpen className="w-12 h-12 text-text-muted mx-auto mb-4 opacity-50" />
             <h3 className="text-xl font-semibold text-text-primary mb-2">No courses yet</h3>
             <p className="text-text-secondary">Your mentor will add courses soon. Check back later!</p>
           </div>
@@ -42,10 +43,8 @@ export default function MyCourses() {
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
                 <div className="w-full h-40 bg-bg-tertiary flex items-center justify-center overflow-hidden">
-                  {course.thumbnail ? (
-                    <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-5xl">📘</span>
+                    <Book className="w-12 h-12 text-accent-primary" />
                   )}
                 </div>
                 <div className="p-6">
@@ -57,7 +56,9 @@ export default function MyCourses() {
                     <span className="text-xs text-text-muted">
                       by {course.createdBy?.name || 'Mentor'}
                     </span>
-                    <span className="text-xs text-accent-primary font-medium">View Course →</span>
+                     <span className="text-xs text-accent-primary font-medium flex items-center gap-1">
+                      View Course <ChevronRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </div>
               </Link>

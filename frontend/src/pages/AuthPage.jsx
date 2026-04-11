@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { loginUser, registerUser } from '../services/api';
+import { ChevronRight, LogIn, UserPlus } from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -176,7 +174,9 @@ export default function AuthPage() {
           >
             <span className="w-px h-4 bg-border-default" />
             <span>Are you an Admin?</span>
-            <span className="text-accent-primary group-hover:text-accent-secondary transition-colors font-medium">Sign in here →</span>
+            <span className="text-accent-primary group-hover:text-accent-secondary transition-colors font-medium flex items-center gap-1">
+              Sign in here <ChevronRight className="w-4 h-4" />
+            </span>
             <span className="w-px h-4 bg-border-default" />
           </Link>
         </div>

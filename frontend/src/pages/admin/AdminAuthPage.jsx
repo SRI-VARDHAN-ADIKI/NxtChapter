@@ -1,7 +1,12 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { loginUser, registerUser } from '../../services/api';
+import { 
+  ShieldCheck, 
+  KeyRound, 
+  AlertCircle, 
+  ArrowLeft,
+  ChevronRight,
+  Lock
+} from 'lucide-react';
 
 export default function AdminAuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -72,7 +77,7 @@ export default function AdminAuthPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
             style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))', border: '1px solid rgba(99,102,241,0.3)' }}>
-            <span className="text-3xl">🛡️</span>
+            <ShieldCheck className="w-8 h-8 text-accent-primary" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             Admin Portal
@@ -80,7 +85,7 @@ export default function AdminAuthPage() {
           <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
             <span style={{ color: 'rgba(99,102,241,0.9)' }}>Nxt</span>
             <span style={{ color: 'rgba(255,255,255,0.7)' }}>Chapter</span>
-            {' '}— Restricted Access
+            {' '}| Restricted Access
           </p>
         </div>
 
@@ -120,9 +125,9 @@ export default function AdminAuthPage() {
 
           {/* Error */}
           {error && (
-            <div className="mb-6 p-3 rounded-xl text-sm animate-fade-in"
+            <div className="mb-6 p-3 rounded-xl text-sm animate-fade-in flex items-center gap-2"
               style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }}>
-              ⚠️ {error}
+              <AlertCircle className="w-4 h-4" /> {error}
             </div>
           )}
 
@@ -187,8 +192,8 @@ export default function AdminAuthPage() {
 
             {!isLogin && (
               <div className="animate-fade-in">
-                <label className="block text-xs font-medium mb-2 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  🔑 Admin Secret Key
+                <label className="block text-xs font-medium mb-2 uppercase tracking-wider flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <KeyRound className="w-3.5 h-3.5" /> Admin Secret Key
                 </label>
                 <input
                   type="password"
@@ -237,7 +242,7 @@ export default function AdminAuthPage() {
             onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.65)'}
             onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.35)'}
           >
-            ← Back to Student Login
+            <ArrowLeft className="w-4 h-4" /> Back to Student Login
           </Link>
         </div>
       </div>
