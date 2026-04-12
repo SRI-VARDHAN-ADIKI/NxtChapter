@@ -1,7 +1,7 @@
 import { getCourses, getEscalatedDoubts } from '../../services/api';
 import { 
   BookOpen, 
-  MessageSquareQuestion, 
+  HelpCircle, 
   CheckCircle2, 
   ChevronRight,
   ArrowRight 
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold text-text-primary">{courses.length}</p>
               </div>
               <div className="glass rounded-2xl p-6 animate-slide-up" style={{ animationDelay: '0.05s' }}>
-                <MessageSquareQuestion className="w-8 h-8 text-warning mb-3" />
+                <HelpCircle className="w-8 h-8 text-warning mb-3" />
                 <p className="text-sm text-text-secondary mb-1">Pending Doubts</p>
                 <p className="text-3xl font-bold text-warning">{pendingDoubts}</p>
               </div>

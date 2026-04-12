@@ -8,11 +8,11 @@ import {
   Brain, 
   Trophy, 
   Video, 
-  MessageSquareQuestion, 
+  HelpCircle, 
   Home, 
   Folder, 
   BarChart2, 
-  MessagesSquare,
+  MessageSquare,
   Flame,
   ChevronRight
 } from 'lucide-react';
@@ -37,14 +37,14 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
     { to: '/skill-tree', label: 'Skill Tree', icon: Brain },
     { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { to: '/interview', label: 'Interview', icon: Video },
-    { to: '/doubts', label: 'Doubts', icon: MessageSquareQuestion },
+    { to: '/doubts', label: 'Doubts', icon: HelpCircle },
   ];
 
   const adminLinks = [
     { to: '/admin', label: 'Overview', icon: Home },
     { to: '/admin/courses', label: 'Course Mgr', icon: Folder },
     { to: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
-    { to: '/admin/doubts', label: 'Doubts Mgr', icon: MessagesSquare },
+    { to: '/admin/doubts', label: 'Doubts Mgr', icon: MessageSquare },
   ];
 
   const links = isAdmin ? adminLinks : studentLinks;

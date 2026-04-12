@@ -8,7 +8,7 @@ import {
   Users, 
   BookOpen, 
   Code2, 
-  MessageSquareQuestion, 
+  MessageSquare, 
   Flame, 
   RefreshCcw 
 } from 'lucide-react';
@@ -36,7 +36,7 @@ export default function AdminAnalytics() {
     { label: 'Total Students', value: data.overview.totalStudents, icon: Users },
     { label: 'Active Courses', value: data.overview.totalCourses, icon: BookOpen },
     { label: 'Questions Solved', value: data.overview.totalSubmissions, icon: Code2 },
-    { label: 'Open Doubts', value: data.overview.totalDoubts, icon: MessageSquareQuestion },
+    { label: 'Open Doubts', value: data.overview.totalDoubts, icon: MessageSquare },
   ];
 
   return (

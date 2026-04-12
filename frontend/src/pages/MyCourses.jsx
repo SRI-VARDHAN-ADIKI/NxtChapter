@@ -7,6 +7,8 @@ export default function MyCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  //useState ans useEffect hooks used here
+
   useEffect(() => {
     getCourses()
       .then(({ data }) => setCourses(data))
@@ -43,9 +45,7 @@ export default function MyCourses() {
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
                 <div className="w-full h-40 bg-bg-tertiary flex items-center justify-center overflow-hidden">
-                  ) : (
-                    <Book className="w-12 h-12 text-accent-primary" />
-                  )}
+                  <Book className="w-12 h-12 text-accent-primary" />
                 </div>
                 <div className="p-6">
                   <h4 className="font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
