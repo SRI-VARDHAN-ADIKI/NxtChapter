@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 import { LogOut } from 'lucide-react';
 

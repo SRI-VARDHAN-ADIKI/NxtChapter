@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { loginUser, registerUser } from '../services/api';
 import { ChevronRight, LogIn, UserPlus } from 'lucide-react';
 

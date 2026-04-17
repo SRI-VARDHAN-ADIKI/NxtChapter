@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { getTopicById, updateProgress } from '../services/api';
 import VoiceTutor from '../components/VoiceTutor';
 import DiscussionView from '../components/DiscussionView';
 import { 

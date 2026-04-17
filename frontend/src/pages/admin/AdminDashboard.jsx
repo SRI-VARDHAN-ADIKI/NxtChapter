@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getCourses, getEscalatedDoubts } from '../../services/api';
 import { 
   BookOpen, 

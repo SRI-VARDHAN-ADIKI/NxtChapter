@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { startInterview, answerInterview } from '../services/api';
 import { 
   AlertTriangle, 

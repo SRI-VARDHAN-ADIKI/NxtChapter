@@ -1,3 +1,6 @@
+import { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { getNotifications, markNotificationRead, markAllNotificationsRead } from '../services/api';
 import { io } from 'socket.io-client';
 import { 
   Bell, 

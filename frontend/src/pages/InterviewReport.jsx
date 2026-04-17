@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getInterviewResult } from '../services/api';
 import { 
   BarChart3, 

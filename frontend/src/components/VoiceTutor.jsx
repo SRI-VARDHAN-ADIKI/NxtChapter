@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { askVoiceTutor } from '../services/api';
 import { 
   Mic, 

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { startQuiz, answerQuiz } from '../services/api';
 import { 
   Brain, 

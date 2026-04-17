@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { getCourseById, getCourseProgress } from '../services/api';
 import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 

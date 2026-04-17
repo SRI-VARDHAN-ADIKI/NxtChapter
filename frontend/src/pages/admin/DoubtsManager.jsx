@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { getEscalatedDoubts, resolveDoubt } from '../../services/api';
 import { 
   CheckCircle2, 

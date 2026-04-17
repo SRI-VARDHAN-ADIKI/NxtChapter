@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { getDiscussions, createDiscussion, addDiscussionReply, upvoteDiscussion, upvoteReply } from '../services/api';
 import { 
   MessageSquare, 
