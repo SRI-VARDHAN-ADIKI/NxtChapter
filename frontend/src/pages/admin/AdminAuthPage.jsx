@@ -64,12 +64,12 @@ export default function AdminAuthPage() {
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0a0a1a 0%, #0d0d2b 50%, #0a0a1a 100%)' }}
     >
-      {/* Premium background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-60 -right-60 w-[500px] h-[500px] rounded-full blur-[150px]"
-          style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)' }} />
-        <div className="absolute -bottom-60 -left-60 w-[500px] h-[500px] rounded-full blur-[150px]"
-          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)' }} />
+      {/* Dynamic Pastel Background Shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 -left-4 w-[400px] h-[400px] bg-accent-primary/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob" />
+        <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] bg-emerald-200/40 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-[20%] w-[400px] h-[400px] bg-orange-200/40 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-blob animation-delay-4000" />
+        <div className="absolute bottom-[20%] right-[10%] w-[600px] h-[600px] bg-sky-200/40 rounded-[40%_60%_70%_30%] mix-blend-multiply filter blur-[130px] opacity-60 animate-blob" />
         {/* Grid overlay */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
@@ -82,7 +82,7 @@ export default function AdminAuthPage() {
             style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))', border: '1px solid rgba(99,102,241,0.3)' }}>
             <ShieldCheck className="w-8 h-8 text-accent-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-text-primary tracking-tight">
             Admin Portal
           </h1>
           <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -101,8 +101,8 @@ export default function AdminAuthPage() {
               onClick={() => handleSwitch(true)}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
                 isLogin
-                  ? 'text-white shadow-lg'
-                  : 'hover:text-white'
+                  ? 'text-text-primary shadow-lg'
+                  : 'hover:text-text-primary'
               }`}
               style={isLogin ? {
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -115,7 +115,7 @@ export default function AdminAuthPage() {
               type="button"
               onClick={() => handleSwitch(false)}
               className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 cursor-pointer ${
-                !isLogin ? 'text-white shadow-lg' : 'hover:text-white'
+                !isLogin ? 'text-text-primary shadow-lg' : 'hover:text-text-primary'
               }`}
               style={!isLogin ? {
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -146,7 +146,7 @@ export default function AdminAuthPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Admin name"
                   required={!isLogin}
-                  className="w-full px-4 py-3 rounded-xl text-white placeholder-opacity-30 focus:outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl text-text-primary placeholder-opacity-30 focus:outline-none transition-all text-sm"
                   style={{
                     background: 'rgba(255,255,255,0.06)',
                     border: '1px solid rgba(255,255,255,0.1)',
@@ -168,7 +168,7 @@ export default function AdminAuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@example.com"
                 required
-                className="w-full px-4 py-3 rounded-xl text-white focus:outline-none transition-all text-sm"
+                className="w-full px-4 py-3 rounded-xl text-text-primary focus:outline-none transition-all text-sm"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
                 onFocus={e => e.target.style.borderColor = 'rgba(99,102,241,0.6)'}
                 onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
@@ -186,7 +186,7 @@ export default function AdminAuthPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-4 py-3 rounded-xl text-white focus:outline-none transition-all text-sm"
+                className="w-full px-4 py-3 rounded-xl text-text-primary focus:outline-none transition-all text-sm"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
                 onFocus={e => e.target.style.borderColor = 'rgba(99,102,241,0.6)'}
                 onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
@@ -204,7 +204,7 @@ export default function AdminAuthPage() {
                   onChange={(e) => setAdminSecret(e.target.value)}
                   placeholder="Enter secret key"
                   required={!isLogin}
-                  className="w-full px-4 py-3 rounded-xl text-white focus:outline-none transition-all text-sm"
+                  className="w-full px-4 py-3 rounded-xl text-text-primary focus:outline-none transition-all text-sm"
                   style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.3)', color: 'white' }}
                   onFocus={e => e.target.style.borderColor = 'rgba(99,102,241,0.7)'}
                   onBlur={e => e.target.style.borderColor = 'rgba(99,102,241,0.3)'}
@@ -218,7 +218,7 @@ export default function AdminAuthPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 text-white font-semibold rounded-xl transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full py-3.5 text-text-primary font-semibold rounded-xl transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-2"
               style={{
                 background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                 boxShadow: '0 4px 24px rgba(99,102,241,0.35)',

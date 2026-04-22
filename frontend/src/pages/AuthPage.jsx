@@ -47,10 +47,12 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-primary relative overflow-hidden">
-      {/* Background orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-accent-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent-secondary/8 rounded-full blur-[120px]" />
+      {/* Dynamic Pastel Background Shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 -left-4 w-[400px] h-[400px] bg-accent-primary/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob" />
+        <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] bg-emerald-200/40 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-[20%] w-[400px] h-[400px] bg-orange-200/40 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-blob animation-delay-4000" />
+        <div className="absolute bottom-[20%] right-[10%] w-[600px] h-[600px] bg-sky-200/40 rounded-[40%_60%_70%_30%] mix-blend-multiply filter blur-[130px] opacity-60 animate-blob" />
       </div>
 
       <div className="w-full max-w-md px-6 animate-fade-in relative z-10">

@@ -84,10 +84,10 @@ export default function DiscussionView({ topicId, courseId }) {
   );
 
   return (
-    <div className="mt-12 border-t border-white/5 pt-10">
+    <div className="mt-12 border-t border-border-default pt-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-xl font-bold text-white">Discussion Forum</h2>
+          <h2 className="text-xl font-bold text-text-primary">Discussion Forum</h2>
           <p className="text-text-secondary text-sm">Ask questions and share knowledge with fellow students</p>
         </div>
         <button 
@@ -106,13 +106,13 @@ export default function DiscussionView({ topicId, courseId }) {
             placeholder="Discussion Title"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full bg-bg-primary border border-white/10 rounded-xl px-4 py-3 text-white mb-4 focus:outline-none focus:border-accent-primary"
+            className="w-full bg-bg-primary border border-border-default rounded-xl px-4 py-3 text-text-primary mb-4 focus:outline-none focus:border-accent-primary"
           />
           <textarea 
             placeholder="What's on your mind?..."
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            className="w-full bg-bg-primary border border-white/10 rounded-xl px-4 py-3 text-white mb-4 min-h-[120px] focus:outline-none focus:border-accent-primary"
+            className="w-full bg-bg-primary border border-border-default rounded-xl px-4 py-3 text-text-primary mb-4 min-h-[120px] focus:outline-none focus:border-accent-primary"
           />
           <div className="flex justify-end">
             <button 
@@ -142,7 +142,7 @@ export default function DiscussionView({ topicId, courseId }) {
                       {d.userId?.name?.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">{d.userId?.name}</p>
+                      <p className="text-sm font-semibold text-text-primary">{d.userId?.name}</p>
                       <p className="text-[10px] text-text-muted">{new Date(d.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
@@ -153,7 +153,7 @@ export default function DiscussionView({ topicId, courseId }) {
                   )}
                 </div>
                 
-                <h3 className="text-lg font-bold text-white mb-2">{d.title}</h3>
+                <h3 className="text-lg font-bold text-text-primary mb-2">{d.title}</h3>
                 <p className="text-sm text-text-secondary leading-relaxed mb-4">{d.content}</p>
 
                 <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ export default function DiscussionView({ topicId, courseId }) {
                     className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
                       d.upvotes?.includes(window.localStorage.getItem('nxtchapter_user_id'))
                       ? 'bg-accent-primary/20 border-accent-primary/40 text-accent-primary'
-                      : 'bg-white/5 border-white/5 text-text-muted hover:text-white hover:border-white/10'
+                      : 'bg-bg-tertiary border-border-default text-text-muted hover:text-text-primary hover:border-border-default'
                     }`}
                   >
                     <ThumbsUp className={`w-3.5 h-3.5 ${d.upvotes?.includes(window.localStorage.getItem('nxtchapter_user_id')) ? 'fill-current' : ''}`} />
@@ -173,16 +173,16 @@ export default function DiscussionView({ topicId, courseId }) {
               </div>
 
               {/* Replies */}
-              <div className="bg-white/[0.02] border-t border-white/5 p-6">
+              <div className="bg-white/[0.02] border-t border-border-default p-6">
                 <div className="space-y-4 mb-4">
                   {d.replies?.map((r) => (
                     <div key={r._id} className="flex gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-xs font-bold text-text-secondary border border-white/5">
+                      <div className="w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-xs font-bold text-text-secondary border border-border-default">
                         {r.userId?.name?.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold text-white">{r.userId?.name}</span>
+                          <span className="text-xs font-semibold text-text-primary">{r.userId?.name}</span>
                           <span className="text-[10px] text-text-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
                         </div>
                         <p className="text-sm text-text-secondary">{r.content}</p>
@@ -204,7 +204,7 @@ export default function DiscussionView({ topicId, courseId }) {
                     placeholder="Write a reply..."
                     value={replyText[d._id] || ''}
                     onChange={(e) => setReplyText({ ...replyText, [d._id]: e.target.value })}
-                    className="flex-1 bg-bg-primary border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-all"
+                    className="flex-1 bg-bg-primary border border-border-default rounded-xl px-4 py-2 text-sm text-text-primary focus:outline-none focus:border-accent-primary transition-all"
                     onKeyDown={(e) => e.key === 'Enter' && handleReply(d._id)}
                   />
                   <button 

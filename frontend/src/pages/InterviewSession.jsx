@@ -206,8 +206,8 @@ export default function InterviewSession() {
       <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#0a0a1a' }}>
         <div className="text-center max-w-md">
           <AlertTriangle className="w-16 h-16 text-warning mx-auto mb-4" />
-          <p className="text-white mb-4">{error}</p>
-          <button onClick={() => navigate('/interview')} className="px-6 py-3 rounded-xl text-white font-semibold cursor-pointer" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>Back to Interview Prep</button>
+          <p className="text-text-primary mb-4">{error}</p>
+          <button onClick={() => navigate('/interview')} className="px-6 py-3 rounded-xl text-text-primary font-semibold cursor-pointer" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>Back to Interview Prep</button>
         </div>
       </div>
     );
@@ -222,7 +222,7 @@ export default function InterviewSession() {
             <ArrowLeft className="w-4 h-4" /> Exit
           </button>
           <span style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
-          <span className="text-sm font-medium text-white">{topic}</span>
+          <span className="text-sm font-medium text-text-primary">{topic}</span>
           <span className="text-xs px-2 py-0.5 rounded-full" style={{
             background: difficulty === 'easy' ? 'rgba(34,197,94,0.15)' : difficulty === 'hard' ? 'rgba(239,68,68,0.15)' : 'rgba(245,158,11,0.15)',
             color: difficulty === 'easy' ? '#22c55e' : difficulty === 'hard' ? '#ef4444' : '#f59e0b',
@@ -253,7 +253,7 @@ export default function InterviewSession() {
             {phase === PHASES.ANSWERING && (
               <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(239,68,68,0.9)' }}>
                 <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                <span className="text-xs font-semibold text-white">REC</span>
+                <span className="text-xs font-semibold text-text-primary">REC</span>
               </div>
             )}
 
@@ -262,7 +262,7 @@ export default function InterviewSession() {
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}>
                 <div className="text-center">
                   <p className="text-sm font-medium" style={{ color: '#f59e0b' }}>PREPARE YOUR ANSWER</p>
-                  <p className="text-6xl font-bold text-white mt-2 font-mono">{timer}</p>
+                  <p className="text-6xl font-bold text-text-primary mt-2 font-mono">{timer}</p>
                   <button onClick={skipPrep} className="mt-4 text-[10px] px-4 py-2 rounded-lg cursor-pointer flex items-center gap-1.5 mx-auto" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
                     Skip Prep <ChevronRight className="w-3 h-3" />
                   </button>
@@ -274,7 +274,7 @@ export default function InterviewSession() {
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
                 <div className="text-center">
                   <div className="w-10 h-10 border-3 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-sm text-white">AI is evaluating your answer...</p>
+                  <p className="text-sm text-text-primary">AI is evaluating your answer...</p>
                 </div>
               </div>
             )}
@@ -283,7 +283,7 @@ export default function InterviewSession() {
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
                 <div className="text-center">
                   <div className="w-10 h-10 border-3 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-sm text-white">Generating interview questions...</p>
+                  <p className="text-sm text-text-primary">Generating interview questions...</p>
                 </div>
               </div>
             )}
@@ -307,7 +307,7 @@ export default function InterviewSession() {
 
           {/* Submit button */}
           {phase === PHASES.ANSWERING && (
-            <button onClick={submitAnswer} className="mt-6 px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all hover:scale-105 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
+            <button onClick={submitAnswer} className="mt-6 px-8 py-3 rounded-xl text-text-primary font-semibold cursor-pointer transition-all hover:scale-105 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
               Submit Answer <ChevronRight className="w-4 h-4" />
             </button>
           )}
@@ -320,7 +320,7 @@ export default function InterviewSession() {
             <p className="text-[11px] font-medium uppercase tracking-wider mb-3" style={{ color: 'rgba(99,102,241,0.8)' }}>
               Question {currentQ + 1} of {totalQ}
             </p>
-            <p className="text-white text-[15px] leading-relaxed font-medium">{question || 'Loading...'}</p>
+            <p className="text-text-primary text-[15px] leading-relaxed font-medium">{question || 'Loading...'}</p>
           </div>
 
           {/* Transcript / Feedback */}
@@ -374,12 +374,12 @@ export default function InterviewSession() {
             {phase === PHASES.COMPLETE && overallResult && (
               <div className="text-center py-6 animate-fade-in">
                 <PartyPopper className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                <p className="text-lg font-bold text-white mb-2">Interview Complete!</p>
+                <p className="text-lg font-bold text-text-primary mb-2">Interview Complete!</p>
                 <p className="text-4xl font-bold mb-4" style={{
                   color: overallResult.overallScore >= 70 ? '#22c55e' : overallResult.overallScore >= 40 ? '#f59e0b' : '#ef4444'
                 }}>{overallResult.overallScore}%</p>
                 <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>{overallResult.overallFeedback}</p>
-                <button onClick={() => navigate(`/interview/report/${attemptId}`)} className="px-6 py-3 rounded-xl text-white font-semibold cursor-pointer flex items-center gap-2 mx-auto" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+                <button onClick={() => navigate(`/interview/report/${attemptId}`)} className="px-6 py-3 rounded-xl text-text-primary font-semibold cursor-pointer flex items-center gap-2 mx-auto" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
                   View Full Report <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

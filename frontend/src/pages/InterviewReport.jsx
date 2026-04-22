@@ -161,7 +161,7 @@ export default function InterviewReport() {
           <button onClick={() => navigate('/interview')} className="px-8 py-3 rounded-xl font-semibold cursor-pointer transition-all text-text-primary flex items-center gap-2" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
             <ArrowLeft className="w-4 h-4" /> Back to Prep
           </button>
-          <button onClick={() => navigate('/interview/session', { state: { topic: attempt.topic, difficulty: attempt.difficulty } })} className="px-8 py-3 rounded-xl text-white font-semibold cursor-pointer transition-all flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
+          <button onClick={() => navigate('/interview/session', { state: { topic: attempt.topic, difficulty: attempt.difficulty } })} className="px-8 py-3 rounded-xl text-text-primary font-semibold cursor-pointer transition-all flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 20px rgba(99,102,241,0.3)' }}>
             <RefreshCw className="w-4 h-4" /> Try Again
           </button>
         </div>

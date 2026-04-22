@@ -31,7 +31,7 @@ export default function Leaderboard() {
           </div>
         ) : (
           <div className="glass rounded-2xl overflow-hidden animate-slide-up">
-            <div className="grid grid-cols-12 px-6 py-4 border-b border-white/5 text-[11px] font-bold uppercase tracking-wider text-text-muted">
+            <div className="grid grid-cols-12 px-6 py-4 border-b border-border-default text-[11px] font-bold uppercase tracking-wider text-text-muted">
               <div className="col-span-1">Rank</div>
               <div className="col-span-5">Student</div>
               <div className="col-span-2 text-center">Level</div>
@@ -53,7 +53,7 @@ export default function Leaderboard() {
                       {student.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white flex items-center gap-2">
+                      <p className="text-sm font-semibold text-text-primary flex items-center gap-2">
                         {student.name}
                         {student.streak >= 3 && <span title={`${student.streak} day streak`} className="flex items-center gap-1 text-orange-400"><Flame className="w-3 h-3" fill="currentColor" /> {student.streak}</span>}
                       </p>
@@ -69,7 +69,7 @@ export default function Leaderboard() {
                     <p className="text-sm font-bold text-accent-primary">{student.xp.toLocaleString()}</p>
                   </div>
                   <div className="col-span-2 text-right">
-                    <p className="text-sm font-mono text-white/80">{student.skillRating}</p>
+                    <p className="text-sm font-mono text-text-primary/80">{student.skillRating}</p>
                   </div>
                 </div>
               ))}

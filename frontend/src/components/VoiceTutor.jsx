@@ -168,7 +168,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         }}
         title="AI Voice Tutor"
       >
-        <Mic className="w-6 h-6 text-white" />
+        <Mic className="w-6 h-6 text-text-primary" />
         {/* Pulse ring */}
         <span className="absolute inset-0 rounded-full animate-ping opacity-20"
           style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }} />
@@ -194,7 +194,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
             <Mic className="w-5 h-5 text-accent-primary" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">Voice Tutor</h3>
+            <h3 className="text-sm font-semibold text-text-primary">Voice Tutor</h3>
             <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
               {topicTitle || 'General'} | AI-Powered
             </p>
@@ -202,7 +202,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         </div>
         <button
           onClick={() => { stopSpeaking(); setIsOpen(false); }}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-xs hover:bg-white/10"
+          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-xs hover:bg-bg-elevated"
           style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}
         >
           <X className="w-3.5 h-3.5" />
@@ -215,7 +215,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
         {history.length === 0 && !transcript && (
           <div className="text-center py-8">
             <Mic className="w-10 h-10 text-text-muted mx-auto mb-3 opacity-30" />
-            <p className="text-sm font-medium text-white mb-1">Ask me anything</p>
+            <p className="text-sm font-medium text-text-primary mb-1">Ask me anything</p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
               Tap the mic and speak your question
             </p>
@@ -317,7 +317,7 @@ export default function VoiceTutor({ topicId, topicTitle }) {
           {state === STATES.LISTENING && (
             <span className="absolute inset-0 rounded-full animate-ping opacity-30" style={{ background: '#ef4444' }} />
           )}
-          <span className="text-xl relative z-10 text-white">
+          <span className="text-xl relative z-10 text-text-primary">
             {state === STATES.LISTENING ? <Square className="w-6 h-6 fill-current" /> :
              state === STATES.SPEAKING ? <Square className="w-6 h-6 fill-current" /> :
              <Mic className="w-6 h-6" />}

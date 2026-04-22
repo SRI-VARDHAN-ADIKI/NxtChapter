@@ -93,36 +93,49 @@ export default function TopicView() {
               {topic.videoUrl ? (
                 <div>
                   <div className="w-full aspect-video bg-black rounded-xl overflow-hidden mb-4">
-                    <video
-                      src={topic.videoUrl}
-                      controls
-                      className="w-full h-full"
-                      onPlay={() => markComplete('videoWatched')}
-                      onRateChange={(e) => setPlaybackRate(e.target.playbackRate)}
-                    />
+                    {topic.videoUrl.includes('youtube.com') || topic.videoUrl.includes('youtu.be') ? (
+                      <iframe
+                        src={topic.videoUrl.replace('watch?v=', 'embed/')}
+                        className="w-full h-full border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={topic.title}
+                        onLoad={() => markComplete('videoWatched')}
+                      />
+                    ) : (
+                      <video
+                        src={topic.videoUrl}
+                        controls
+                        className="w-full h-full"
+                        onPlay={() => markComplete('videoWatched')}
+                        onRateChange={(e) => setPlaybackRate(e.target.playbackRate)}
+                      />
+                    )}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-text-secondary">Playback speed: {playbackRate}x</p>
-                    <div className="flex gap-2">
-                      {[0.5, 1, 1.25, 1.5, 2].map((speed) => (
-                        <button
-                          key={speed}
-                          onClick={() => {
-                            const video = document.querySelector('video');
-                            if (video) video.playbackRate = speed;
-                            setPlaybackRate(speed);
-                          }}
-                          className={`px-3 py-1 text-xs rounded-lg cursor-pointer transition-colors ${
-                            playbackRate === speed
-                              ? 'bg-accent-primary text-white'
-                              : 'bg-bg-tertiary text-text-secondary hover:text-text-primary'
-                          }`}
-                        >
-                          {speed}x
-                        </button>
-                      ))}
+                  {!topic.videoUrl.includes('youtube.com') && !topic.videoUrl.includes('youtu.be') && (
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-text-secondary">Playback speed: {playbackRate}x</p>
+                      <div className="flex gap-2">
+                        {[0.5, 1, 1.25, 1.5, 2].map((speed) => (
+                          <button
+                            key={speed}
+                            onClick={() => {
+                              const video = document.querySelector('video');
+                              if (video) video.playbackRate = speed;
+                              setPlaybackRate(speed);
+                            }}
+                            className={`px-3 py-1 text-xs rounded-lg cursor-pointer transition-colors ${
+                              playbackRate === speed
+                                ? 'bg-accent-primary text-white'
+                                : 'bg-bg-tertiary text-text-secondary hover:text-text-primary'
+                            }`}
+                          >
+                            {speed}x
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-16">

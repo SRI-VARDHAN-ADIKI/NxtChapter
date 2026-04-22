@@ -14,8 +14,9 @@ export default function TopBar() {
   };
 
   return (
-    <header className="h-16 border-b border-white/5 bg-bg-primary/80 backdrop-blur-xl sticky top-0 z-40 flex items-center px-8 justify-end">
+    <header className="h-16 border-b border-border-default bg-bg-primary/80 backdrop-blur-xl sticky top-0 z-40 flex items-center px-8 justify-end">
       <div className="flex items-center gap-6">
+        
         <NotificationBell />
         
         {isAdmin && (
@@ -24,16 +25,16 @@ export default function TopBar() {
           </span>
         )}
 
-        <div className="h-8 w-[1px] bg-white/5" />
+        <div className="h-8 w-[1px] bg-border-default" />
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <p className="text-xs font-bold text-white">{user?.name}</p>
+            <p className="text-xs font-bold text-text-primary">{user?.name}</p>
             <p className="text-[10px] text-text-muted capitalize">{user?.role}</p>
           </div>
           <button 
             onClick={handleLogout}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 border border-red-500/10 hover:bg-red-500 hover:text-white transition-all cursor-pointer group"
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-danger/10 text-danger border border-danger/10 hover:bg-danger hover:text-white transition-all cursor-pointer group"
             title="Sign Out"
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />

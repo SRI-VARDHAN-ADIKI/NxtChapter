@@ -117,7 +117,7 @@ export default function InterviewPrep() {
           <button
             onClick={handleStart}
             disabled={!topic || (topic === '__custom__' && !customTopic.trim())}
-            className="w-full py-4 text-white font-semibold text-lg rounded-xl transition-all duration-300 hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3"
+            className="w-full py-4 text-text-primary font-semibold text-lg rounded-xl transition-all duration-300 hover:shadow-xl disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-3"
             style={{
               background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
               boxShadow: '0 8px 30px rgba(99,102,241,0.3)',

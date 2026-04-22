@@ -39,17 +39,17 @@ export default function SkillTree() {
           {tree?.tiers.map((tier, idx) => (
             <div key={idx} className="relative z-10 w-full animate-slide-up" style={{ animationDelay: `${idx * 0.2}s` }}>
               <div className="flex flex-col items-center mb-8">
-                <div className="px-6 py-2 rounded-full bg-bg-secondary border border-white/10 text-xs font-bold uppercase tracking-widest text-accent-primary mb-6 shadow-xl shadow-black/50">
+                <div className="px-6 py-2 rounded-full bg-bg-secondary border border-border-default text-xs font-bold uppercase tracking-widest text-accent-primary mb-6 shadow-xl shadow-black/50">
                   {tier.name}
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                   {tier.topics.map((topic, tidx) => (
-                    <div key={tidx} className="glass p-6 rounded-2xl border-white/5 hover:border-accent-primary/30 transition-all group">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:bg-accent-primary/10 transition-colors">
+                    <div key={tidx} className="glass p-6 rounded-2xl border-border-default hover:border-accent-primary/30 transition-all group">
+                      <div className="w-10 h-10 rounded-xl bg-bg-tertiary flex items-center justify-center mb-4 group-hover:bg-accent-primary/10 transition-colors">
                         <BookOpen className="w-5 h-5 text-accent-primary" />
                       </div>
-                      <h3 className="text-white font-bold mb-2 group-hover:text-accent-primary transition-colors">{topic.title}</h3>
+                      <h3 className="text-text-primary font-bold mb-2 group-hover:text-accent-primary transition-colors">{topic.title}</h3>
                       <p className="text-xs text-text-secondary leading-relaxed mb-4 line-clamp-3">
                         {topic.reason}
                       </p>

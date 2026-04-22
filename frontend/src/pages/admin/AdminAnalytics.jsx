@@ -47,7 +47,7 @@ export default function AdminAnalytics() {
             <h1 className="text-2xl font-bold text-text-primary">Platform Analytics</h1>
             <p className="text-text-secondary text-sm">Real-time performance and engagement metrics</p>
           </div>
-          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm hover:bg-white/10 transition-all cursor-pointer flex items-center gap-2">
+          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-bg-tertiary border border-border-default rounded-lg text-sm hover:bg-bg-elevated transition-all cursor-pointer flex items-center gap-2">
             <RefreshCcw className="w-4 h-4" /> Refresh Data
           </button>
         </div>
@@ -62,7 +62,7 @@ export default function AdminAnalytics() {
                 </div>
                 <div>
                   <p className="text-text-muted text-xs font-medium uppercase tracking-wider">{s.label}</p>
-                  <p className="text-2xl font-bold text-white">{s.value}</p>
+                  <p className="text-2xl font-bold text-text-primary">{s.value}</p>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function AdminAnalytics() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="text-text-muted border-b border-white/5">
+                  <tr className="text-text-muted border-b border-border-default">
                     <th className="pb-3 font-medium">Name</th>
                     <th className="pb-3 font-medium text-center">Level</th>
                     <th className="pb-3 font-medium text-center">Streak</th>
@@ -166,7 +166,7 @@ export default function AdminAnalytics() {
                 <tbody className="divide-y divide-white/5">
                   {data.topStudents.map((s, i) => (
                     <tr key={i} className="hover:bg-white/[0.02]">
-                      <td className="py-4 text-white font-medium">{s.name}</td>
+                      <td className="py-4 text-text-primary font-medium">{s.name}</td>
                       <td className="py-4 text-center">{s.level}</td>
                        <td className="py-4 text-center">
                         <div className="flex items-center justify-center gap-1.5 text-orange-400">
@@ -187,17 +187,17 @@ export default function AdminAnalytics() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
            <div className="glass p-6 rounded-2xl">
               <p className="text-text-muted text-xs mb-1 uppercase tracking-wider">Avg Quiz Score</p>
-              <p className="text-3xl font-bold text-white">{Math.round(data.quizScores.avgScore || 0)}%</p>
+              <p className="text-3xl font-bold text-text-primary">{Math.round(data.quizScores.avgScore || 0)}%</p>
               <p className="text-xs text-text-muted mt-2">Across {data.quizScores.totalAttempts} total attempts</p>
            </div>
            <div className="glass p-6 rounded-2xl">
               <p className="text-text-muted text-xs mb-1 uppercase tracking-wider">Avg Interview Score</p>
-              <p className="text-3xl font-bold text-white">{Math.round(data.interviewStats.avgScore || 0)}%</p>
+              <p className="text-3xl font-bold text-text-primary">{Math.round(data.interviewStats.avgScore || 0)}%</p>
               <p className="text-xs text-text-muted mt-2">{data.interviewStats.total} simulation(s) completed</p>
            </div>
            <div className="glass p-6 rounded-2xl">
               <p className="text-text-muted text-xs mb-1 uppercase tracking-wider">Doubts Resolution</p>
-              <p className="text-3xl font-bold text-white">
+              <p className="text-3xl font-bold text-text-primary">
                 {Math.round((data.doubtStats.find(s => s._id === 'resolved')?.count || 0) / (data.overview.totalDoubts || 1) * 100)}%
               </p>
               <p className="text-xs text-text-muted mt-2">Conversion of open to resolved doubts</p>

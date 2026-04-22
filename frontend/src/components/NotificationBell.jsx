@@ -102,9 +102,9 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="relative w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all cursor-pointer group"
+        className="relative w-10 h-10 rounded-xl bg-bg-tertiary border border-border-default flex items-center justify-center hover:bg-bg-elevated transition-all cursor-pointer group"
       >
-        <Bell className={`w-5 h-5 transition-colors ${unreadCount > 0 ? 'text-accent-primary' : 'text-text-secondary group-hover:text-white'}`} />
+        <Bell className={`w-5 h-5 transition-colors ${unreadCount > 0 ? 'text-accent-primary' : 'text-text-secondary group-hover:text-text-primary'}`} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-bg-secondary">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -113,9 +113,9 @@ export default function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 max-h-[480px] bg-bg-secondary border border-white/10 rounded-2xl shadow-2xl z-[100] overflow-hidden flex flex-col animate-scale-in">
-          <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-            <h3 className="text-sm font-bold text-white">Notifications</h3>
+        <div className="absolute right-0 mt-3 w-80 max-h-[480px] bg-bg-secondary border border-border-default rounded-2xl shadow-2xl z-[100] overflow-hidden flex flex-col animate-scale-in">
+          <div className="px-5 py-4 border-b border-border-default flex items-center justify-between bg-white/[0.02]">
+            <h3 className="text-sm font-bold text-text-primary">Notifications</h3>
             {unreadCount > 0 && (
               <button 
                 onClick={handleMarkAllRead}
@@ -136,11 +136,11 @@ export default function NotificationBell() {
                 <div 
                   key={n._id} 
                   onClick={() => !n.isRead && handleMarkRead(n._id)}
-                  className={`px-5 py-4 border-b border-white/5 transition-colors cursor-pointer flex gap-4 ${n.isRead ? 'opacity-60' : 'bg-accent-primary/[0.03] opacity-100 hover:bg-accent-primary/[0.06]'}`}
+                  className={`px-5 py-4 border-b border-border-default transition-colors cursor-pointer flex gap-4 ${n.isRead ? 'opacity-60' : 'bg-accent-primary/[0.03] opacity-100 hover:bg-accent-primary/[0.06]'}`}
                 >
                   <div className="shrink-0 mt-1">{getTypeIcon(n.type)}</div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-white mb-1">{n.title}</p>
+                    <p className="text-xs font-bold text-text-primary mb-1">{n.title}</p>
                     <p className="text-[11px] text-text-secondary leading-normal mb-2">{n.message}</p>
                     <p className="text-[9px] text-text-muted uppercase tracking-tighter">
                       {new Date(n.createdAt).toLocaleString()}
@@ -152,7 +152,7 @@ export default function NotificationBell() {
             )}
           </div>
 
-          <div className="px-5 py-3 border-t border-white/5 bg-white/[0.01] text-center">
+          <div className="px-5 py-3 border-t border-border-default bg-white/[0.01] text-center">
              <p className="text-[10px] text-text-muted">Stay updated with your progress</p>
           </div>
         </div>
