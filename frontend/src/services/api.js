@@ -30,6 +30,7 @@ export const deleteTopic = (id) => api.delete(`/topics/${id}`);
 export const getCodingQuestions = (topicId) => api.get(`/coding/${topicId}`);
 export const addCodingQuestion = (data) => api.post('/coding', data);
 export const evaluateCode = (data) => api.post('/coding/evaluate', data);
+export const runLocalCode = (data) => api.post('/coding/run-local', data);
 
 export const startQuiz = (data) => api.post('/quiz/start', data);
 export const answerQuiz = (data) => api.post('/quiz/answer', data);

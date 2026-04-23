@@ -34,10 +34,18 @@ export default function InterviewSession() {
   const [error, setError] = useState('');
   const [overallResult, setOverallResult] = useState(null);
 
+  // Stable refs so timer/speech callbacks always read fresh values
+  const setPhaseRef = (p) => { phaseRef.current = p; setPhase(p); };
+  const setAttemptIdRef = (id) => { attemptIdRef.current = id; setAttemptId(id); };
+  const setTranscriptRef = (t) => { transcriptRef.current = t; setTranscript(t); };
+
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const recognitionRef = useRef(null);
   const timerRef = useRef(null);
+  const transcriptRef = useRef('');
+  const attemptIdRef = useRef(null);
+  const phaseRef = useRef(PHASES.LOADING);
 
   // Start webcam
   useEffect(() => {
@@ -70,7 +78,7 @@ export default function InterviewSession() {
 
     startInterview({ topic, difficulty })
       .then(({ data }) => {
-        setAttemptId(data.attemptId);
+        setAttemptIdRef(data.attemptId);
         setTotalQ(data.totalQuestions);
         setCurrentQ(0);
         setQuestion(data.question);
@@ -83,9 +91,9 @@ export default function InterviewSession() {
   }, [topic]);
 
   const startPrepPhase = useCallback(() => {
-    setPhase(PHASES.PREP);
+    setPhaseRef(PHASES.PREP);
     setTimer(PREP_TIME);
-    setTranscript('');
+    setTranscriptRef('');
     setEvaluation(null);
 
     if (timerRef.current) clearInterval(timerRef.current);
@@ -102,9 +110,9 @@ export default function InterviewSession() {
   }, []);
 
   const startAnswerPhase = useCallback(() => {
-    setPhase(PHASES.ANSWERING);
+    setPhaseRef(PHASES.ANSWERING);
     setTimer(ANSWER_TIME);
-    setTranscript('');
+    setTranscriptRef('');
 
     // Start speech recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -126,7 +134,9 @@ export default function InterviewSession() {
             interim = r[0].transcript;
           }
         }
-        setTranscript(finalTranscript + interim);
+        const combined = finalTranscript + interim;
+        transcriptRef.current = combined;
+        setTranscript(combined);
       };
 
       recognition.onerror = (e) => {
@@ -136,8 +146,8 @@ export default function InterviewSession() {
       };
 
       recognition.onend = () => {
-        // Restart if still in answering phase
-        if (phase === PHASES.ANSWERING) {
+        // Use ref so this always reads the current phase, not a stale closure
+        if (phaseRef.current === PHASES.ANSWERING) {
           try { recognition.start(); } catch {}
         }
       };
@@ -146,13 +156,13 @@ export default function InterviewSession() {
       recognition.start();
     }
 
-    // Answer timer
+    // Answer timer — calls submitAnswer via ref to avoid stale closure
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setTimer(prev => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          submitAnswer();
+          submitAnswerRef.current();
           return 0;
         }
         return prev - 1;
@@ -167,17 +177,20 @@ export default function InterviewSession() {
       recognitionRef.current = null;
     }
 
-    setPhase(PHASES.EVALUATING);
+    setPhaseRef(PHASES.EVALUATING);
+    // Read the latest transcript from ref (not stale state closure)
+    const currentTranscript = transcriptRef.current;
+    const currentAttemptId = attemptIdRef.current;
 
     try {
-      const { data } = await answerInterview({ attemptId, answer: transcript });
+      const { data } = await answerInterview({ attemptId: currentAttemptId, answer: currentTranscript });
       setEvaluation(data.evaluation);
 
       if (data.isComplete) {
         setOverallResult({ overallScore: data.overallScore, overallFeedback: data.overallFeedback });
-        setPhase(PHASES.COMPLETE);
+        setPhaseRef(PHASES.COMPLETE);
       } else {
-        setPhase(PHASES.FEEDBACK);
+        setPhaseRef(PHASES.FEEDBACK);
         // After showing feedback, prep for next question
         setTimeout(() => {
           setCurrentQ(data.currentQuestion);
@@ -187,9 +200,13 @@ export default function InterviewSession() {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to evaluate answer');
-      setPhase(PHASES.FEEDBACK);
+      setPhaseRef(PHASES.FEEDBACK);
     }
   };
+
+  // Keep a stable ref to submitAnswer so the interval can call the latest version
+  const submitAnswerRef = useRef(submitAnswer);
+  useEffect(() => { submitAnswerRef.current = submitAnswer; });
 
   const skipPrep = () => {
     if (timerRef.current) clearInterval(timerRef.current);

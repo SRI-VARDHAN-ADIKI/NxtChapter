@@ -5,7 +5,7 @@ import { updateGamification } from '../services/gamificationService.js';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 const model = new ChatGoogleGenerativeAI({
-  model: 'gemini-flash-latest',
+  model: 'gemini-1.5-flash',
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 2048,
 });
@@ -56,18 +56,28 @@ export const startQuiz = async (req, res) => {
 
     const existing = await QuizAttempt.findOne({ studentId, topicId, status: 'in_progress' });
     if (existing) {
-      const lastQuestion = existing.questions[existing.questions.length - 1];
-      return res.json({
-        attemptId: existing._id,
-        questionNumber: existing.totalQuestions + 1,
-        maxQuestions: existing.maxQuestions,
-        score: existing.score,
-        question: {
-          questionText: lastQuestion?.questionText || '',
-          options: lastQuestion?.options || [],
-        },
-        status: existing.status,
-      });
+      // The last question in the array is the UNANSWERED one (it was pushed before save)
+      // totalQuestions counts answered questions, so questions[totalQuestions] is the current pending question
+      const pendingQuestion = existing.questions[existing.totalQuestions];
+      if (!pendingQuestion) {
+        // All questions already answered but status not updated — mark complete
+        existing.status = 'completed';
+        await existing.save();
+      } else {
+        return res.json({
+          attemptId: existing._id,
+          questionNumber: existing.totalQuestions + 1,
+          maxQuestions: existing.maxQuestions,
+          score: existing.score,
+          currentDifficulty: existing.currentDifficulty,
+          question: {
+            questionText: pendingQuestion.questionText,
+            options: pendingQuestion.options,
+            difficulty: pendingQuestion.difficulty,
+          },
+          status: existing.status,
+        });
+      }
     }
 
     const firstQuestion = await generateQuestion(topic.title, 1);
@@ -91,9 +101,11 @@ export const startQuiz = async (req, res) => {
       questionNumber: 1,
       maxQuestions: 10,
       score: 0,
+      currentDifficulty: 1,
       question: {
         questionText: firstQuestion.questionText,
         options: firstQuestion.options,
+        difficulty: 1,
       },
       status: 'in_progress',
     });
@@ -176,9 +188,11 @@ export const answerQuestion = async (req, res) => {
       score: attempt.score,
       questionNumber: attempt.totalQuestions + 1,
       maxQuestions: attempt.maxQuestions,
+      currentDifficulty: attempt.currentDifficulty,
       question: {
         questionText: nextQuestion.questionText,
         options: nextQuestion.options,
+        difficulty: attempt.currentDifficulty,
       },
     });
   } catch (error) {

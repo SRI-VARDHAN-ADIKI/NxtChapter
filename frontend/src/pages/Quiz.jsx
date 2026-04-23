@@ -26,6 +26,7 @@ export default function Quiz() {
   const [completed, setCompleted] = useState(false);
   const [finalResult, setFinalResult] = useState(null);
   const [error, setError] = useState('');
+  const [currentDifficulty, setCurrentDifficulty] = useState(1);
 
   const handleStart = async () => {
     setLoading(true);
@@ -36,6 +37,7 @@ export default function Quiz() {
       setQuestionNumber(data.questionNumber);
       setMaxQuestions(data.maxQuestions);
       setScore(data.score);
+      setCurrentDifficulty(data.currentDifficulty || data.question?.difficulty || 1);
       setQuizStarted(true);
     } catch (err) {
       console.error('Quiz start failed:', err);
@@ -68,6 +70,7 @@ export default function Quiz() {
         setTimeout(() => {
           setQuestion(data.question);
           setQuestionNumber(data.questionNumber);
+          setCurrentDifficulty(data.currentDifficulty || data.question?.difficulty || currentDifficulty);
           setSelectedAnswer('');
           setFeedback(null);
         }, 1500);
@@ -145,9 +148,22 @@ export default function Quiz() {
               ))}
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-text-secondary">Score</p>
-            <p className="text-xl font-bold text-accent-primary">{score}</p>
+          <div className="flex items-center gap-4">
+            {/* Difficulty Badge */}
+            <div className="text-center">
+              <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Difficulty</p>
+              <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
+                currentDifficulty <= 2 ? 'bg-success/15 text-success' :
+                currentDifficulty <= 4 ? 'bg-warning/15 text-warning' :
+                'bg-danger/15 text-danger'
+              }`}>
+                {currentDifficulty <= 2 ? 'Easy' : currentDifficulty <= 4 ? 'Medium' : 'Hard'} ({currentDifficulty}/7)
+              </span>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-text-secondary">Score</p>
+              <p className="text-xl font-bold text-accent-primary">{score}</p>
+            </div>
           </div>
         </div>
 

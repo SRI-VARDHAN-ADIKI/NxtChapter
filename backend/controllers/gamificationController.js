@@ -1,5 +1,5 @@
 import { User } from '../models/User.js';
-import { updateGamification } from '../services/gamificationService.js';
+import { updateGamification, BADGE_DEFS } from '../services/gamificationService.js';
 
 // Called when a student performs a custom action
 export const recordActivity = async (req, res) => {

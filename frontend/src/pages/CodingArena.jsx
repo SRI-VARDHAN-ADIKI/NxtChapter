@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { useAuth } from '../context/AuthContext';
-import { getCodingQuestions, evaluateCode } from '../services/api';
+import { getCodingQuestions, evaluateCode, runLocalCode } from '../services/api';
 import { 
   ChevronLeft, 
   ChevronUp, 
@@ -12,23 +12,25 @@ import {
   Terminal,
   Play,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  ChevronRight,
+  TerminalSquare
 } from 'lucide-react';
 
 const LANGUAGES = [
   { label: 'JavaScript', value: 'javascript' },
-  { label: 'Python', value: 'python' },
-  { label: 'Java', value: 'java' },
-  { label: 'C++', value: 'cpp' },
-  { label: 'TypeScript', value: 'typescript' },
+  // { label: 'Python', value: 'python' },
+  // { label: 'Java', value: 'java' },
+  // { label: 'C++', value: 'cpp' },
+  // { label: 'C', value: 'c' }
 ];
 
 const DEFAULT_CODE = {
   javascript: '// Write your solution here\nfunction solve(input) {\n  \n}\n',
   python: '# Write your solution here\ndef solve(input):\n    pass\n',
-  java: '// Write your solution here\nclass Solution {\n    public static void main(String[] args) {\n        \n    }\n}\n',
-  cpp: '// Write your solution here\n#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}\n',
-  typescript: '// Write your solution here\nfunction solve(input: any): any {\n  \n}\n',
+  java: '// Write your solution here\n// Note: Read input from standard input (System.in)\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n    }\n}\n',
+  cpp: '// Write your solution here\n// Note: Read input from standard input (cin)\n#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}\n',
+  c: '// Write your solution here\n// Note: Read input from standard input (scanf)\n#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}\n',
 };
 
 function EloAnimation({ oldElo, newElo }) {
@@ -93,7 +95,17 @@ function ResultModal({ result, onClose }) {
         <div className="flex justify-center gap-8 mb-8">
           <ScoreRing score={result.syntaxScore} label="Syntax" color="#6366f1" />
           <ScoreRing score={result.conceptScore} label="Concepts" color="#22c55e" />
+          {result.totalTestCases > 0 && (
+            <ScoreRing score={Math.round((result.testCasesPassed / result.totalTestCases) * 100) || 0} label="Tests Passed" color="#eab308" />
+          )}
         </div>
+        {result.totalTestCases > 0 && (
+          <div className="text-center mb-6">
+            <span className="px-4 py-2 rounded-xl text-sm font-semibold bg-bg-secondary text-text-primary border border-border-default">
+              Test Cases: {result.testCasesPassed} / {result.totalTestCases} Passed
+            </span>
+          </div>
+        )}
         <div className="bg-bg-primary/60 rounded-xl p-5 mb-6">
           <h4 className="text-sm font-semibold text-text-secondary mb-3">AI Feedback</h4>
           <p className="text-sm text-text-primary leading-relaxed whitespace-pre-wrap">{result.aiFeedback}</p>
@@ -114,6 +126,9 @@ export default function CodingArena() {
   const [language, setLanguage] = useState('javascript');
   const [code, setCode] = useState(DEFAULT_CODE['javascript']);
   const [submitting, setSubmitting] = useState(false);
+  const [runningLocal, setRunningLocal] = useState(false);
+  const [localResults, setLocalResults] = useState(null);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const [result, setResult] = useState(null);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
 
@@ -131,12 +146,28 @@ export default function CodingArena() {
     const lang = e.target.value;
     setLanguage(lang);
     setCode(DEFAULT_CODE[lang]);
+    setLocalResults(null);
+  };
+
+  const handleRunLocal = async () => {
+    setRunningLocal(true);
+    setIsConsoleOpen(true);
+    setLocalResults(null);
+    try {
+      const { data } = await runLocalCode({ questionId: selectedQuestion._id, userCode: code, language });
+      setLocalResults(data);
+    } catch (error) {
+      console.error('Run local failed:', error);
+      setLocalResults([{ passed: false, actualOutput: 'Error communicating with execution engine.', expectedOutput: '' }]);
+    } finally {
+      setRunningLocal(false);
+    }
   };
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const { data } = await evaluateCode({ userId: user._id, questionId: selectedQuestion._id, userCode: code });
+      const { data } = await evaluateCode({ userId: user._id, questionId: selectedQuestion._id, userCode: code, language });
       setResult(data);
       login({ ...user, skillRating: data.newElo, totalQuestionsAnswered: (user.totalQuestionsAnswered || 0) + 1 });
     } catch {} finally { setSubmitting(false); }
@@ -200,7 +231,33 @@ export default function CodingArena() {
           </div>
           <div className="flex-1 overflow-y-auto p-6">
             <h2 className="text-xl font-bold text-text-primary mb-4">{selectedQuestion?.title}</h2>
-            <div className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">{selectedQuestion?.description}</div>
+            <div className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap mb-8">{selectedQuestion?.description}</div>
+
+            {selectedQuestion?.testCases && selectedQuestion.testCases.length > 0 && (
+              <div>
+                <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-4 border-b border-border-default pb-2">Examples</h3>
+                <div className="space-y-4">
+                  {selectedQuestion.testCases.filter(tc => !tc.isHidden).map((tc, idx) => (
+                    <div key={idx} className="bg-bg-secondary/50 rounded-xl p-4 border border-border-default">
+                      <p className="text-xs font-semibold text-text-muted mb-2">Example {idx + 1}:</p>
+                      <div className="mb-2">
+                        <span className="text-xs font-medium text-accent-primary">Input: </span>
+                        <code className="text-xs text-text-primary font-mono bg-bg-primary px-1.5 py-0.5 rounded">{tc.input}</code>
+                      </div>
+                      <div>
+                        <span className="text-xs font-medium text-success">Output: </span>
+                        <code className="text-xs text-text-primary font-mono bg-bg-primary px-1.5 py-0.5 rounded">{tc.expectedOutput}</code>
+                      </div>
+                    </div>
+                  ))}
+                  {selectedQuestion.testCases.filter(tc => tc.isHidden).length > 0 && (
+                    <div className="text-xs text-text-muted italic text-center mt-4">
+                      + {selectedQuestion.testCases.filter(tc => tc.isHidden).length} hidden test cases
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -217,29 +274,95 @@ export default function CodingArena() {
               ))}
             </select>
           </div>
-          <div className="flex-1 min-h-0">
-            <Editor
-              height="100%"
-              language={language}
-              value={code}
-              onChange={(val) => setCode(val || '')}
-              theme="vs-dark"
-              options={{ fontSize: 14, fontFamily: "'JetBrains Mono', monospace", minimap: { enabled: false }, padding: { top: 16 }, scrollBeyondLastLine: false, smoothScrolling: true, bracketPairColorization: { enabled: true }, automaticLayout: true, tabSize: 2 }}
-            />
+          <div className="flex-1 min-h-0 relative flex flex-col">
+            <div className="flex-1 min-h-0">
+              <Editor
+                height="100%"
+                language={language}
+                value={code}
+                onChange={(val) => setCode(val || '')}
+                theme="vs-dark"
+                options={{ fontSize: 14, fontFamily: "'JetBrains Mono', monospace", minimap: { enabled: false }, padding: { top: 16 }, scrollBeyondLastLine: false, smoothScrolling: true, bracketPairColorization: { enabled: true }, automaticLayout: true, tabSize: 2 }}
+              />
+            </div>
+
+            {/* Console Output Panel */}
+            <div className={`border-t border-border-default bg-bg-secondary flex flex-col transition-all duration-300 ease-in-out ${isConsoleOpen ? 'h-64' : 'h-10'}`}>
+              <div 
+                className="h-10 px-4 flex items-center justify-between cursor-pointer hover:bg-bg-primary/50 transition-colors border-b border-transparent"
+                onClick={() => setIsConsoleOpen(!isConsoleOpen)}
+              >
+                <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
+                  <TerminalSquare className="w-4 h-4" /> Console
+                </div>
+                <ChevronUp className={`w-4 h-4 text-text-secondary transition-transform duration-300 ${isConsoleOpen ? 'rotate-180' : ''}`} />
+              </div>
+              
+              {isConsoleOpen && (
+                <div className="flex-1 overflow-y-auto p-4 bg-bg-primary font-mono text-sm">
+                  {runningLocal ? (
+                    <div className="flex items-center gap-3 text-text-secondary">
+                      <span className="w-4 h-4 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+                      Running local test cases...
+                    </div>
+                  ) : localResults ? (
+                    localResults.length > 0 ? (
+                      <div className="space-y-4">
+                        <div className="font-bold mb-4 text-text-primary border-b border-border-default pb-2">
+                          Test Results: {localResults.filter(r => r.passed).length} / {localResults.length} Passed
+                        </div>
+                        {localResults.map((res, i) => (
+                          <div key={i} className={`p-3 rounded-lg border ${res.passed ? 'bg-success/10 border-success/20' : 'bg-danger/10 border-danger/20'}`}>
+                            <div className="flex items-center gap-2 font-bold mb-2">
+                              {res.passed ? <CheckCircle2 className="w-4 h-4 text-success" /> : <X className="w-4 h-4 text-danger" />}
+                              <span className={res.passed ? 'text-success' : 'text-danger'}>Test Case {i + 1}</span>
+                            </div>
+                            <div className="space-y-1.5 text-xs">
+                              <div className="flex">
+                                <span className="text-text-muted w-24 shrink-0">Input:</span>
+                                <span className="text-text-primary">{res.input}</span>
+                              </div>
+                              <div className="flex">
+                                <span className="text-text-muted w-24 shrink-0">Expected:</span>
+                                <span className="text-text-primary">{res.expectedOutput}</span>
+                              </div>
+                              <div className="flex">
+                                <span className="text-text-muted w-24 shrink-0">Actual:</span>
+                                <span className={res.passed ? 'text-text-primary' : 'text-danger'}>{res.actualOutput}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-text-muted">No local test cases available for this question.</p>
+                    )
+                  ) : (
+                    <p className="text-text-muted">Click "Run Local" to evaluate your code against the visible test cases.</p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="h-16 border-t border-border-default bg-bg-secondary/80 backdrop-blur-xl flex items-center justify-between px-6 shrink-0">
         <p className="text-xs text-text-muted">{language.charAt(0).toUpperCase() + language.slice(1)} | {code.split('\n').length} lines</p>
-        <button onClick={handleSubmit} disabled={submitting || !code.trim()} className="px-8 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-accent-primary/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-          {submitting ? (
-            <span className="flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Evaluating...
-            </span>
-          ) : 'Submit Code'}
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={handleRunLocal} disabled={runningLocal || submitting || !code.trim()} className="px-6 py-2.5 bg-bg-primary hover:bg-bg-secondary border border-border-default text-text-primary text-sm font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2">
+            <Play className="w-4 h-4" />
+            {runningLocal ? 'Running...' : 'Run Local'}
+          </button>
+          <button onClick={handleSubmit} disabled={submitting || runningLocal || !code.trim()} className="px-8 py-2.5 bg-accent-primary hover:bg-accent-secondary text-white text-sm font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-accent-primary/25 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+            {submitting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Evaluating...
+              </span>
+            ) : 'Submit Code'}
+          </button>
+        </div>
       </div>
 
       {result && <ResultModal result={result} onClose={() => { setResult(null); navigate(`/topic/${topicId}`); }} />}

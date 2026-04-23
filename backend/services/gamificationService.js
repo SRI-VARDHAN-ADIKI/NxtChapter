@@ -1,7 +1,7 @@
 import { User } from '../models/User.js';
 import { Notification } from '../models/Notification.js';
 
-const BADGE_DEFS = [
+export const BADGE_DEFS = [
   { id: 'first_quiz', name: 'Quiz Starter', icon: '🎯', condition: (u) => u.totalQuestionsAnswered >= 1 },
   { id: 'quiz_10', name: 'Quiz Enthusiast', icon: '🏅', condition: (u) => u.totalQuestionsAnswered >= 10 },
   { id: 'quiz_50', name: 'Quiz Master', icon: '👑', condition: (u) => u.totalQuestionsAnswered >= 50 },
