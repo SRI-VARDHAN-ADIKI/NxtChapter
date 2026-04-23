@@ -1,7 +1,8 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { getMyGamification } from '../services/api';
+import NotificationBell from './NotificationBell';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -14,12 +15,14 @@ import {
   BarChart2, 
   MessageSquare,
   Flame,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
 
 export default function Sidebar({ isExpanded, setIsExpanded }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdmin = user?.role === 'admin';
   const [gamification, setGamification] = useState(null);
 
@@ -48,6 +51,11 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
   ];
 
   const links = isAdmin ? adminLinks : studentLinks;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <aside 
@@ -110,8 +118,31 @@ export default function Sidebar({ isExpanded, setIsExpanded }) {
         </div>
       )}
 
-      {/* Toggle Button */}
-      <div className="p-4 border-t border-border-default">
+      {/* Bottom Actions */}
+      <div className="mt-auto p-4 space-y-4 border-t border-border-default">
+        {/* Profile/Notification Section */}
+        <div className={`flex items-center gap-3 ${isExpanded ? 'px-2' : 'justify-center'}`}>
+          <div className={`relative ${!isExpanded && 'hidden'}`}>
+            <NotificationBell />
+          </div>
+          
+          {isExpanded && (
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-text-primary truncate">{user?.name}</p>
+              <p className="text-[10px] text-text-muted capitalize">{user?.role}</p>
+            </div>
+          )}
+
+          <button 
+            onClick={handleLogout}
+            className={`flex items-center justify-center rounded-xl bg-danger/10 text-danger border border-danger/10 hover:bg-danger hover:text-white transition-all cursor-pointer group shrink-0 ${isExpanded ? 'w-9 h-9' : 'w-10 h-10'}`}
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform" />
+          </button>
+        </div>
+
+        {/* Toggle Button */}
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full p-2 bg-bg-tertiary border border-border-default rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-all cursor-pointer flex items-center justify-center"
