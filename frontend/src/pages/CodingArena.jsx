@@ -19,18 +19,18 @@ import {
 
 const LANGUAGES = [
   { label: 'JavaScript', value: 'javascript' },
-  // { label: 'Python', value: 'python' },
-  // { label: 'Java', value: 'java' },
-  // { label: 'C++', value: 'cpp' },
-  // { label: 'C', value: 'c' }
+  { label: 'Python', value: 'python' },
+  { label: 'Java', value: 'java' },
+  { label: 'C++', value: 'cpp' },
+  { label: 'C', value: 'c' }
 ];
 
 const DEFAULT_CODE = {
-  javascript: '// Write your solution here\nfunction solve(input) {\n  \n}\n',
-  python: '# Write your solution here\ndef solve(input):\n    pass\n',
-  java: '// Write your solution here\n// Note: Read input from standard input (System.in)\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n    }\n}\n',
-  cpp: '// Write your solution here\n// Note: Read input from standard input (cin)\n#include <iostream>\nusing namespace std;\n\nint main() {\n    \n    return 0;\n}\n',
-  c: '// Write your solution here\n// Note: Read input from standard input (scanf)\n#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}\n',
+  javascript: '// your code goes here..\n',
+  python: '# your code goes here..\n',
+  java: '// your code goes here..\n',
+  cpp: '// your code goes here..\n',
+  c: '// your code goes here..\n',
 };
 
 function EloAnimation({ oldElo, newElo }) {

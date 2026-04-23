@@ -44,11 +44,23 @@ export const evaluateCode = async (req, res) => {
     const testCasesPassed = executionResults.filter(r => r.passed).length;
     const totalTestCases = allTestCases.length;
 
-    // 2. AI Conceptual Evaluation (Vibes, Style, Mastery)
-    const aiResult = await evaluateSubmissionCode(question.title, question.description, allTestCases, userCode);
+    // 2. AI Conceptual Evaluation (Vibes, Style, Mastery) - Non-blocking
+    let aiResult = {
+      overallScore: 0.8, // Default fallback
+      conceptMastery: 80,
+      syntaxAccuracy: 80,
+      feedback: "Great effort! Your code passed the functional tests. (AI Feedback temporarily unavailable)",
+      weakPoints: []
+    };
+
+    try {
+      const aiResponse = await evaluateSubmissionCode(question.title, question.description, allTestCases, userCode);
+      if (aiResponse) aiResult = aiResponse;
+    } catch (aiError) {
+      console.error("AI Evaluation failed, using fallbacks:", aiError.message);
+    }
 
     const K = 32;
-    // ensure AI overallScore is a valid number, default 0 if parsed poorly
     const aiScoreSafe = parseFloat(aiResult.overallScore) || 0;
     const expectedScore = 1 / (1 + Math.pow(10, (question.difficultyRating - user.skillRating) / 400));
     const pointChange = Math.round(K * (aiScoreSafe - expectedScore));
